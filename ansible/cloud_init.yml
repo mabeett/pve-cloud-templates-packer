@@ -1,0 +1,37 @@
+# installs cloud-init on target system
+## required for ubuntu (and probably others) OS
+---
+- hosts: all
+  become: yes
+  gather_facts: no
+  tasks:
+  - name: validate new OS is started
+    wait_for:
+      timeout: 300
+      port: "{{ vm_validate_port }}"
+      host: "{{ vm_host }}"
+    connection: local
+    vars:
+      ansible_connection: local
+    become: no
+    when: validate_new_OS | default(True)
+
+  - name: waiting for connection ssh access
+    wait_for_connection:
+      timeout: 300
+
+  - name: gather facts
+    setup:
+
+  - name: wait cloud init ending
+    ansible.builtin.command: cloud-init status --long --wait
+    ignore_errors: "{{ non_graceful_cloud_init | default(True) | bool }}"
+    when: wait_cloud_init | default(True)
+
+  - include_role:
+      name: install-qemu-guest-agent
+    when: install_qemu_ga | default(True)
+
+  - include_role:
+      name: remove-root
+    when: remove_root | default(True)

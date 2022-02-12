@@ -1,0 +1,47 @@
+### dumps qemu copy on target system
+# installs a cloud image on target's disk via qemu-img(1)
+#
+# This playbook needs to be running in installer livedistro as sysrescuecd
+---
+- hosts: all
+  become: yes
+  # gather_facts: no
+  tasks:
+  - name: qemu-img copy {{ cloud_img_url }} to {{ vm_disk }}
+    ansible.builtin.command: "qemu-img convert -p -f qcow2 -O raw {{ cloud_img_url }} {{ vm_disk }}"
+    poll: 0
+    async: 45000
+    register: q_st
+
+  - name: Check status of qemu task
+    async_status:
+      jid: "{{ q_st.ansible_job_id }}"
+    register: job_result
+    until: job_result.finished
+    retries: 200
+
+  - name: sync
+    ansible.builtin.command: "sync"
+    poll: 0
+    async: 45000
+    register: s_st
+
+  - name: Check status of sync
+    async_status:
+      jid: "{{ s_st.ansible_job_id }}"
+    register: job_result
+    until: job_result.finished
+    retries: 200
+
+  - name: gropart for {{ vm_disk }} 1
+    ansible.builtin.command: "growpart --fudge 1 {{ vm_disk }} 1"
+    poll: 0
+    async: 45000
+    register: g_st
+
+  - name: Check status of growpart task
+    async_status:
+      jid: "{{ g_st.ansible_job_id }}"
+    register: job_result
+    until: job_result.finished
+    retries: 200

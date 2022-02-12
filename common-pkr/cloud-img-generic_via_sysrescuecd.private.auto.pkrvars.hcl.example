@@ -1,0 +1,10 @@
+#
+
+proxmox_url         = "https://192.168.0.254:8006/api2/json"
+proxmox_api_host    = "192.168.0.254"
+proxmox_node        = "pve"
+proxmox_user        = "root@pam!packer-builder"
+proxmox_api_user    = "root@pam"
+proxmox_token_id    = "packer-test"
+proxmox_token       = "beefbeef-beef-beef-beef-beefbeefbeef"
+cloud_init_ssh_keys = "'ssh-rsa AAAA...B3NzaC1yc2EAAAADAQ== foo@esample'"

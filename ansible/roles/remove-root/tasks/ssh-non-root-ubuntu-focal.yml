@@ -1,0 +1,6 @@
+---
+
+- name: remove ssh root login file
+  ansible.builtin.file:
+    path: "{{ ssh_root_login_file }}"
+    state: absent

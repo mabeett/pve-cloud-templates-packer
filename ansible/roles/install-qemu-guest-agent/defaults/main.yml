@@ -1,0 +1,7 @@
+---
+
+# ensures state for service
+qga_service_status_ensure: yes
+
+# status for service to be ensured
+qga_state: started

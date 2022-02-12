@@ -1,0 +1,50 @@
+### setups proxmox settings for VM
+# Cloud-Init setup
+# Serial port since  packer plugin does not adds the
+# serial port for video device.
+#
+# This playbook may be running in installer livedistro as sysrescuecd
+---
+- hosts: all
+  become: yes
+  tasks:
+  - name: Install proxmoxer pip package
+    ansible.builtin.pip:
+      # https://pypi.org/project/docker-compose/#history
+      name: proxmoxer
+      state: present
+    become: yes
+
+  - name: Update cloud-init VM config
+    community.general.proxmox_kvm:
+      api_user: "{{ proxmox_api_user }}"
+      api_token_id: "{{ proxmox_token_id }}"
+      api_token_secret: "{{ proxmox_token }}"
+      api_host: "{{ proxmox_api_host }}"
+      node: "{{ proxmox_node }}"
+      vmid: "{{ vm_id }}"
+      ciuser: "{{ cloud_init_user }}"
+      cipassword: "{{ cloud_init_password }}"
+      ipconfig:
+        ipconfig0: "{{ cloud_init_ipconfig }}"
+      sshkeys: "{{ cloud_init_ssh_keys }}"
+      # proxmox_default_behavior: compatibility
+      update: yes
+
+  # PLACEHOLDER: serial_port
+  ## packer plugin does not configure a serial port device despite of configuring serial as
+  ## graphic adatper
+  - name: Update Serial Port {{ vm_serial_device }} VM config
+    community.general.proxmox_kvm:
+      api_user: "{{ proxmox_api_user }}"
+      api_token_id: "{{ proxmox_token_id }}"
+      api_token_secret: "{{ proxmox_token }}"
+      api_host: "{{ proxmox_api_host }}"
+      node: "{{ proxmox_node }}"
+      vmid: "{{ vm_id }}"
+      serial: "{{ serialp | items2dict }}"
+      update: yes
+    vars:
+      serialp:
+        - key: "{{ vm_serial_device }}"
+          value: socket

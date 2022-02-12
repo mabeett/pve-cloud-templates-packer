@@ -1,0 +1,39 @@
+# TODO
+
+## Add Virtio RNG
+
+ - hardware on proxmox
+ - software considerations: kernel 5.10 version?
+
+## CPU type study
+
+ - according [to qemu](https://qemu.readthedocs.io/en/latest/system/qemu-cpu-models.html#other-non-recommended-x86-cpus) the default one - kvm64 is non-recommended.
+ - ( cpu_type  flag )
+
+## Remove dummy cloud init drivei
+
+Remove dummy cloud init drive after packer from proxmox server
+
+## add more distros
+
+ - rocky?
+   - https://computingforgeeks.com/generate-rocky-linux-qcow2-image-for-openstack-kvm-qemu/
+ - centos?
+ - flatcar?
+ - rancher?
+ - Alpine?
+
+
+# DONE
+
+## take prev project as template
+
+## validate hardware definition
+
+ - src
+   - https://pve.proxmox.com/wiki/Cloud-Init_Support
+   - https://gist.github.com/chriswayg/b6421dcc69cb3b7e41f2998f1150e1df
+
+## apply notes and automation
+
+command should/can be installed via ansible
