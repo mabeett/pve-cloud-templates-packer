@@ -4,6 +4,8 @@ set -e
 
 . variables.sh
 
+[ -f variables.local.sh ] && . variables.local.sh
+
 set -u
 set -o nounset
 # set -x
@@ -84,6 +86,10 @@ EOF
 clean_tmp(){
     exval=${?}
     rm -rf ${TMPDIR}
+    # TODO: delete temp iso cloud init drive from proxmox.
+    >&2 echo "TODO: delete iso generated drive"
+    >&2 echo " storage: ${PKR_VAR_temp_cinit_iso_storage_pool}"
+    >&2 echo " iso    : ${CI_FILE}"
     exit ${exval}
 }
 
@@ -105,8 +111,3 @@ export PKR_VAR_temp_cinit_iso_url="file://$(pwd)/${TMPDIR}/${CI_FILE}"
 
 time packer validate .
 time packer build .
-
-# TODO: delete temp iso cloud init drive from proxmox.
->&2 echo "TODO: delete iso generated drive"
->&2 echo " storage: ${PKR_VAR_temp_cinit_iso_storage_pool}"
->&2 echo " iso    : ${CI_FILE}"
