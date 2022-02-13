@@ -25,7 +25,7 @@
       jid: "{{ q_st.ansible_job_id }}"
     register: job_result
     until: job_result.finished
-    retries: 200
+    retries: "{{ wait_qemu_img | default(1800) }}"
 
   - name: sync
     ansible.builtin.command: "sync"
@@ -38,7 +38,7 @@
       jid: "{{ s_st.ansible_job_id }}"
     register: job_result
     until: job_result.finished
-    retries: 200
+    retries: "{{ wait_sync | default(1800) }}"
 
   - name: gropart for {{ vm_disk }} 1
     ansible.builtin.command: "growpart --fudge 1 {{ vm_disk }} 1"
@@ -51,4 +51,4 @@
       jid: "{{ g_st.ansible_job_id }}"
     register: job_result
     until: job_result.finished
-    retries: 200
+    retries: "{{ wait_growpart | default(1800) }}"
