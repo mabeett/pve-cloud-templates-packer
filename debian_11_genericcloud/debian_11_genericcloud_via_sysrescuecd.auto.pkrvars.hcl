@@ -14,8 +14,8 @@ vm_cores  = "1"
 vm_memory = "1024"
 
 # OS
-# cloud_img_url = "https://cloud.debian.org/images/cloud/bullseye/latest/debian-11-genericcloud-amd64.qcow2"
-cloud_img_url   = "http://192.168.0.21/cloud-images/debian-11-genericcloud-amd64.qcow2"
+cloud_img_url = "https://cloud.debian.org/images/cloud/bullseye/latest/debian-11-genericcloud-amd64.qcow2"
+# cloud_img_url   = "http://192.168.0.21/cloud-images/debian-11-genericcloud-amd64.qcow2"
 cloud_init_user = "debian"
 
 # VM description
