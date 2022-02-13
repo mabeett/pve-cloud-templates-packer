@@ -7,8 +7,15 @@
   become: yes
   # gather_facts: no
   tasks:
-  - name: qemu-img copy {{ cloud_img_url }} to {{ vm_disk }}
-    ansible.builtin.command: "qemu-img convert -p -f qcow2 -O raw {{ cloud_img_url }} {{ vm_disk }}"
+  - name: "get effective url for {{ cloud_img_url }} - preventing redirect"
+    ansible.builtin.command:
+      cmd: "curl -I -o/dev/null -Ls -w %{url_effective} {{ cloud_img_url }}"
+      ## command + curl is neccessary because url nor curl can get the url without body/content
+      warn: false
+    register: eff_url
+
+  - name: qemu-img copy "{{ eff_url.stdout }} to {{ vm_disk }}"
+    ansible.builtin.command: "qemu-img convert -p -f qcow2 -O raw {{ eff_url.stdout }} {{ vm_disk }}"
     poll: 0
     async: 45000
     register: q_st
