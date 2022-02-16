@@ -7,8 +7,15 @@
   become: yes
   # gather_facts: no
   tasks:
-  - name: qemu-img copy {{ cloud_img_url }} to {{ vm_disk }}
-    ansible.builtin.command: "qemu-img convert -p -f qcow2 -O raw {{ cloud_img_url }} {{ vm_disk }}"
+  - name: "get effective url for {{ cloud_img_url }} - preventing redirect"
+    ansible.builtin.command:
+      cmd: "curl -I -o/dev/null -Ls -w %{url_effective} {{ cloud_img_url }}"
+      ## command + curl is neccessary because url nor curl can get the url without body/content
+      warn: false
+    register: eff_url
+
+  - name: qemu-img copy "{{ eff_url.stdout }} to {{ vm_disk }}"
+    ansible.builtin.command: "qemu-img convert -p -f qcow2 -O raw {{ eff_url.stdout }} {{ vm_disk }}"
     poll: 0
     async: 45000
     register: q_st
@@ -18,7 +25,7 @@
       jid: "{{ q_st.ansible_job_id }}"
     register: job_result
     until: job_result.finished
-    retries: 200
+    retries: "{{ wait_qemu_img | default(1800) }}"
 
   - name: sync
     ansible.builtin.command: "sync"
@@ -31,7 +38,7 @@
       jid: "{{ s_st.ansible_job_id }}"
     register: job_result
     until: job_result.finished
-    retries: 200
+    retries: "{{ wait_sync | default(1800) }}"
 
   - name: gropart for {{ vm_disk }} 1
     ansible.builtin.command: "growpart --fudge 1 {{ vm_disk }} 1"
@@ -44,4 +51,4 @@
       jid: "{{ g_st.ansible_job_id }}"
     register: job_result
     until: job_result.finished
-    retries: 200
+    retries: "{{ wait_growpart | default(1800) }}"

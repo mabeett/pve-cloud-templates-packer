@@ -1,0 +1,3 @@
+## in this fie you may overwrite any of the variables defined in variables.sh
+# consider using it on the distro directory.
+# take variables.sh as reference
