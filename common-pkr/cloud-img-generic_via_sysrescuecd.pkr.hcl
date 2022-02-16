@@ -324,11 +324,11 @@ build {
   }
 
   provisioner "shell" {
-    inline = [
-      "rm -rf /var/lib/cloud/instances/* ",
-      "rm -rf /var/lib/apt/lists/* ",
-      "find /var/cache/apt/archives/ -type f  -name \\*.deb -delete",
-      "echo '${var.template_name} -- Packer Build Complete'"
+    environment_vars = [
+      "TEMPLATE_NAME=${var.template_name}"
+    ]
+    scripts = [
+      "clean_files.sh"
     ]
   }
 }
