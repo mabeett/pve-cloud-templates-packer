@@ -11,28 +11,28 @@ There are instructions for preparing Cloud-Init ready templates in proxmox using
 
 Packer offers a [community plugin](https://www.packer.io/plugins/builders/proxmox/iso) for PVE.
 
-This project uses the packer plugin and Ansible provisioner for starting a [SystemRescueCD](https://www.system-rescue.org/) liveOS and there dumping a cloud image.
+This project uses the packer plugin for PVE and Ansible provisioner for starting a [SystemRescueCD](https://www.system-rescue.org/) liveOS and there dumping a cloud image.
 
-Since packer's plugin lacks of some features related to VM setup, this ones are done via `proxmox_kvm` [module](https://docs.ansible.com/ansible/latest/collections/community/general/proxmox_kvm_module.html#ansible-collections-community-general-proxmox-kvm-module) provided by Ansible's community collection.
+Since packer's plugin lacks of some features related to VM setup, this ones are done via [proxmox_kvm module](https://docs.ansible.com/ansible/latest/collections/community/general/proxmox_kvm_module.html#ansible-collections-community-general-proxmox-kvm-module) provided by Ansible's community collection.
 
 ## How does this work?
 
 Each packer subproject uses [proxmox-iso](https://www.packer.io/plugins/builders/proxmox/iso) builder.
 
-Instead of booting with the target distro installer and using boot commands for launching a kickstart/preseed file a SystemRescueCD distro is launched.
+Instead of booting with the target distro installer and using boot commands for launching a kickstart/preseed file the bootup is made with SystemRescueCD.
 
-Then via Ansible builder QEMU-IMG command is used for copying a cloud-ready OS content with all his packages and setup (as is would be dd).
+Theno, via Ansible provisioner QEMU-IMG is used for copying a cloud-ready OS content with all his packages and setup (as it would be dd).
 
-Since some cloud-images does not have [QEMU Guest Agent installed](https://www.qemu.org/docs/master/interop/qemu-ga.html) installed the VM is restarted, then Ansible is connected to the target OS for installing the package. In order to make the login available and compatible in the target OS a custom ISO image is created with the same login credentials used for SystemRescueCD.
+Since some cloud-images does not have [QEMU Guest Agent installed](https://www.qemu.org/docs/master/interop/qemu-ga.html) the VM is restarted, thn the provisioner is connected to the target OS for installing the package. A custom ISO image is created with the same login credentials used for SystemRescueCD in order to make the login available and compatible with the target OS.
 
-Packer proxmox builder cannot makes some VM setups as serial drive, then Ansible is used for solving it.
+Packer proxmox builder cannot make some VM setups as serial drive, then Ansible is used for solving it.
 
 ## Requirements
 
 This development has been made with
 
 - bash
-- cloud-localds tool from cloud-image-utils ubuntu package
+- [cloud-localds](https://code.launchpad.net/cloud-utils) tool from [cloud-image-utils](https://packages.ubuntu.com/impish/cloud-image-utils) ubuntu package.
 - Packer 1.7.10
 - Ansible 2.10.5
 - Proxmox PVE 7.1 with his API token.
@@ -50,11 +50,11 @@ This development has been made with
 
 ## Use
 
-- Install the required software as Packer or Ansible
-- Generate your API token
+- Install the required software as Packer or Ansible.
+- Generate your API token for proxmox PVE.
 - setup your `common-pkr/cloud-img-generic_via_sysrescuecd.private.auto.pkrvars.hcl` file with your credentials, you may read the example file.
 - read and setup local files for the packer directory involved. Edit/generate `*.auto.pkrvars.hcl` or `variables.local.sh`, you may see the example files.
-
+- execute build script
 
 ```
 export distro="ubuntu_2004_cloudimg"
@@ -64,6 +64,10 @@ bash build.sh
 
 Depending on your proxmox node and the server with the cloud images bandwidth you might require download the disk image on your local net, save it and edit `cloud_img_url` variable.
 
+### Adding a new image/template
+
+You may make symbolic links to files from [common-pkr](common-pkr/) directory as it's made on [ubuntu_2004_minimal](ubuntu_2004_minimal/) directory.
+
 ## Know bugs and Future work
 
 See [TODO](TODO) file.
@@ -72,6 +76,6 @@ See [TODO](TODO) file.
 
 This are other project/resources for solving part or entirely this work:
 
- - https://gist.github.com/chriswayg/43fbea910e024cbe608d7dcb12cb8466
- - https://gist.github.com/chriswayg/b6421dcc69cb3b7e41f2998f1150e1df
- - https://cloudalbania.com/posts/2022-01-homelab-with-proxmox-and-packer/
+- https://gist.github.com/chriswayg/43fbea910e024cbe608d7dcb12cb8466
+- https://gist.github.com/chriswayg/b6422dcc69cb3b7e41f2998f1150e1df
+- https://cloudalbania.com/posts/2022-01-homelab-with-proxmox-and-packer/
