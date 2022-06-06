@@ -1,0 +1,143 @@
+# installs cloud-init, wireguard and other componets in an openwrt server
+---
+- hosts: all
+  become: yes
+  gather_facts: no
+  vars:
+    wg_if_name: wgAA
+    local_destintation_files: /none/
+    validate_new_OS: yes
+    opkg_upgrade: yes
+  tasks:
+  - name: include server wireguard keys
+    include_vars: "{{ local_destintation_files }}/wg_server.yaml"
+
+################################################################################
+  - name: validate new OS is started
+    wait_for:
+      timeout: 300
+      port: "{{ vm_validate_port }}"
+      host: "{{ vm_host }}"
+    connection: local
+    vars:
+      ansible_connection: local
+    become: no
+    when: validate_new_OS
+
+  - name: waiting for connection ssh access
+    wait_for_connection:
+      delay: 10
+      timeout: 300
+    when: false
+
+################################################################################
+
+  - name: "opkg update"
+    ansible.builtin.raw: "opkg update"
+    register: opkg_update
+    when: opkg_update is undefined
+
+  - name: "opkg list-upgradable | cut -f 1 -d ' ' "
+    ansible.builtin.raw: "opkg list-upgradable | cut -f 1 -d ' ' "
+    register: opkg_upgrade_list
+    when: opkg_upgrade
+  - name: "Ansible | List all known variables and facts"
+    debug:
+      var: opkg_upgrade_list.stdout_lines
+  - name: "opkg upgrade packages"
+    ansible.builtin.raw: "opkg upgrade {{ opkg_upupgrade_item }}"
+    with_items: "{{ opkg_upgrade_list.stdout_lines }}"
+    loop_control:
+      loop_var: opkg_upupgrade_item
+    when: opkg_upgrade
+
+################################################################################
+
+  - name: "opkg update"
+    ansible.builtin.raw: "opkg update"
+    register: opkg_update
+    when: opkg_update is undefined
+
+  - name: "opkg install qemu-ga"
+    ansible.builtin.raw: "opkg install qemu-ga"
+    register: install
+
+  - name: "udevtrigger"
+    ansible.builtin.raw: "udevtrigger"
+    register: udevtrigger
+
+  - name: "/etc/init.d/qemu-ga stop"
+    ansible.builtin.raw: "/etc/init.d/qemu-ga stop"
+    register: stop_qga
+
+  - name: "/etc/init.d/qemu-ga start"
+    ansible.builtin.raw: "/etc/init.d/qemu-ga start"
+    register: start_qga
+
+################################################################################
+  - name: "opkg update"
+    ansible.builtin.raw: "opkg update"
+    register: opkg_update
+    when: opkg_update is undefined
+
+  # in order to access to JSON-RPC API
+  # FIXME also luci-lib-ipkg ?
+  - name: "opkg install luci rpc packages"
+    ansible.builtin.raw: "opkg install {{ item }}"
+    with_items:
+      - luci-mod-rpc
+      - luci-lib-ipkg
+    register: install_json_rpc
+
+################################################################################
+
+  - name: "install wireguard"
+    ansible.builtin.raw: "opkg install luci-proto-wireguard luci-app-wireguard"
+    register: install_wg
+
+################################################################################
+  - name: "setup lan network ipaddr and netmask"
+    ansible.builtin.raw: "{{ item }}"
+    with_items:
+      - "uci set network.lan.ipaddr=\"{{ net_lan_ipaddr }}\""
+      - "uci set network.lan.netmask=\"{{ net_lan_netmask }}\""
+    register: set_net_lan
+
+################################################################################
+  # https://openwrt.org/docs/guide-user/services/vpn/wireguard/server#network
+  - name: "uci -q delete network.{{ wg_if_name }}"
+    ansible.builtin.raw: "uci -q delete network.{{ wg_if_name }}"
+    register: delete
+    ignore_errors: yes
+
+  - name: "uci set network.{{ wg_if_name }} setup"
+    ansible.builtin.raw: "{{ item }}"
+    with_items:
+      - "uci set network.{{ wg_if_name }}=\"interface\""
+      - "uci set network.{{ wg_if_name }}.proto=\"wireguard\""
+      - "uci set network.{{ wg_if_name }}.private_key=\"{{ wireguard_server_key }}\""
+      - "uci set network.{{ wg_if_name }}.listen_port=\"{{ wireguard_server_listen_port }}\""
+      - "uci add_list network.{{ wg_if_name }}.addresses=\"{{ wireguard_server_address }}\""
+    register: wg_net_setup
+
+  # # Add VPN peers
+  # https://openwrt.org/docs/guide-user/services/vpn/wireguard/server#network
+  - name: "uci -q delete network.wgclient"
+    ansible.builtin.raw: "uci -q delete network.wgclient"
+    register: d_wg_net_client
+    ignore_errors: yes
+
+  - name: "uci set network.wgclient setup"
+    ansible.builtin.raw: "{{ item }}"
+    with_items:
+      - "uci set network.wgclient=\"wireguard_{{ wg_if_name }}\""
+      - "uci set network.wgclient.public_key=\"{{ wireguard_client_pubkey }}\""
+      - "uci add_list network.wgclient.allowed_ips=\"{{ wireguard_client_allowed_ip }}\""
+      - "uci commit network"
+    register: wg_net_peers
+
+  - name: "poweroff"
+    ansible.builtin.raw: "poweroff"
+      # warn: false
+    register: poweroff
+    when: false

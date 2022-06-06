@@ -1,0 +1,17 @@
+[Interface]
+Address = {{ wireguard_client_allowed_ip }}
+PrivateKey = {{ wireguard_client_key_auto }}
+#DNS = 10.11.14.1
+
+[Peer]
+PublicKey = {{ wireguard_server_pubkey_auto }}
+Endpoint = {{ wireguard_server_listen_address }}:{{ wireguard_server_listen_port }}
+#AllowedIPs = 0.0.0.0/0, ::/0
+AllowedIPs =  {{ (net_lan_ipaddr + '/' + ((net_lan_ipaddr + '/' + net_lan_netmask) | ipaddr('prefix')) | string ) | ipaddr }}
+{%- for cidr in wireguard_client_extra_routes %}
+, {{ cidr }}
+{%- endfor %}
+
+
+# This is for if you're behind NAT
+PersistentKeepalive = 25
