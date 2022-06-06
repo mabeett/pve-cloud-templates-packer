@@ -1,0 +1,178 @@
+### dumps qemu copy on target system
+# patches setup of OpenWRT in order to get access from WAN and adds some settings for wirwguard
+#
+# This playbook needs to be running in installer livedistro as sysrescuecd
+---
+- hosts: all
+  become: yes
+  vars:
+    local_destintation_files: /none/
+    root_part_number: 2
+    wg_if_name: wgAA
+    wg_mountpoint: /mnt
+    wg_client_config_fname: wg_client.conf
+    disable_ipv6: yes
+    wireguard_server_key: "auto"
+    wireguard_server_pubkey: "auto"
+    wireguard_client_key: "auto"
+    wireguard_client_pubkey: "auto"
+  tasks:
+##############################################################################
+################### interventions on local drive #############################
+##############################################################################
+  - name: "mount {{ vm_disk }}{{ root_part_number }} {{ wg_mountpoint }} "
+    ansible.builtin.command:
+      cmd: "mount {{ vm_disk }}{{ root_part_number }} {{ wg_mountpoint }} "
+    register: mount
+
+##############################################################################
+########################## Firewall setup ####################################
+##############################################################################
+  - name: "add firewall rules for admin from wan"
+    ansible.builtin.blockinfile:
+      path: "{{ wg_mountpoint }}/etc/config/firewall"
+      insertafter: '^\s*option path /etc/firewall\.user'
+      marker: "# {mark} ANSIBLE MANAGED BLOCK http(s) access from WAN"
+      block: |
+        config rule
+                option name 'https'
+                option dest_port '443'
+                option target 'ACCEPT'
+                option src 'wan'
+        
+        config rule
+                option name 'ssh'
+                option src 'wan'
+                option dest_port '22'
+                option target 'ACCEPT'
+        
+        config rule
+                option name 'http'
+                option src 'wan'
+                option dest_port '80'
+                option target 'ACCEPT'
+
+  - name: "add firewall rules for accessing to WireGuard Service"
+    ansible.builtin.blockinfile:
+      path: "{{ wg_mountpoint }}/etc/config/firewall"
+      insertafter: '^\s*option path /etc/firewall\.user'
+      marker: "# {mark} ANSIBLE MANAGED BLOCK WireGuard Aaccess from WAN"
+      block: |
+        config rule 'wg'
+                option name 'Allow-WireGuard'
+                option src 'wan'
+                option dest_port '{{ wireguard_server_listen_port }}'
+                option proto 'udp'
+                option target 'ACCEPT'
+
+  - name: /etc/config/firewall - name zones lan and wan
+    ansible.builtin.replace:
+      path: "{{ wg_mountpoint }}/etc/config/firewall"
+      regexp: "^(config\\s*zone)(\\n\\s*option name\\s*{{ item }})$"
+      replace: "\\1 {{ item }}\\2"
+    with_items:
+      - lan
+      - wan
+
+  - name: /etc/config/firewall - add wg interface to lan zone
+    ansible.builtin.replace:
+      path: "{{ wg_mountpoint }}/etc/config/firewall"
+      regexp: "^(\\s*option\\s*name\\s*lan\\n)(\\s*list\\s*network\\s*)('lan')$"
+      replace: "\\1\\2\\3\\n\\2'{{ wg_if_name }}'"
+
+  - name: /etc/config/firewall disable ipv6
+    ansible.builtin.replace:
+      path: "{{ wg_mountpoint }}/etc/config/firewall"
+      regexp: '^(config\s*defaults\n)(\s*option\s*)(\w*)(\s*)(\S*)$'
+      replace: "\\1\\2\\3\\4\\5\\n\\2disable_ipv6\\4'1'"
+    when: disable_ipv6
+
+################################################################################
+########################## Root Password #######################################
+################################################################################
+  - name: "edit root password in {{ wg_mountpoint }}/etc/shadow"
+    ansible.builtin.replace:
+      path: "{{ wg_mountpoint }}/etc/shadow"
+      regexp: '^(root)::(.+)$'
+      replace: "\\1:{{ root_password | password_hash('md5_crypt') }}:\\2"
+
+################################################################################
+################# wireguard client configuration ###############################
+################################################################################
+  ## https://openwrt.org/docs/guide-user/services/vpn/wireguard/basics
+  ## https://openwrt.org/docs/guide-user/services/vpn/wireguard/server
+  # cmd "wg genkey | tee wg.key | wg pubkey > wg.pub"
+  - name: generate wireguard server keys
+    ansible.builtin.raw: "{{ item }}"
+    with_items:
+      -  "wg genkey | tee /tmp/wg-server.key"
+      -  "wg pubkey < /tmp/wg-server.key | tee /tmp/wg-server.pub"
+    register: wg_skeys
+    when: wireguard_server_key == "auto" or wireguard_server_pubkey == "auto"
+  - name: Setting facts server wireguard vars
+    set_fact:
+      wireguard_server_key_auto: "{{ wg_skeys.results[0]['stdout_lines'][0] }}"
+      wireguard_server_pubkey_auto: "{{ wg_skeys.results[1]['stdout_lines'][0] }}"
+    when: wireguard_server_key == "auto" or wireguard_server_pubkey == "auto"
+  - name: Setting facts server wireguard vars - user selected
+    set_fact:
+      wireguard_server_key_auto: "{{ wireguard_server_key }}"
+      wireguard_server_pubkey_auto: "{{ wireguard_server_pubkey }}"
+    when: wireguard_server_key != "auto" and wireguard_server_pubkey != "auto"
+
+
+  - name: generate wireguard client keys
+    ansible.builtin.raw: "{{ item }}"
+    with_items:
+      -  "wg genkey | tee /tmp/wg-client.key"
+      -  "wg pubkey < /tmp/wg-client.key | tee /tmp/wg-client.pub"
+    register: wg_ckeys
+    when: wireguard_client_key == "auto" or wireguard_client_pubkey == "auto"
+  - name: Setting facts client wireguard vars
+    set_fact:
+      wireguard_client_key_auto: "{{ wg_ckeys.results[0]['stdout_lines'][0] }}"
+      wireguard_client_pubkey_auto: "{{ wg_ckeys.results[1]['stdout_lines'][0] }}"
+    when: wireguard_client_key == "auto" or wireguard_client_pubkey == "auto"
+  - name: Setting facts client wireguard vars - user selected
+    set_fact:
+      wireguard_client_key_auto: "{{ wireguard_client_key }}"
+      wireguard_client_pubkey_auto: "{{  wireguard_client_pubkey }}"
+    when: wireguard_client_key != "auto" and wireguard_client_pubkey != "auto"
+
+
+  - name: write automatic variables to /tmp/wg_server.yaml
+    blockinfile:
+      path: /tmp/wg_server.yaml
+      create: yes
+      block: |
+        ---
+        wireguard_server_key: {{ wireguard_server_key_auto }}
+        wireguard_server_pubkey: {{ wireguard_server_pubkey_auto }}
+        wireguard_client_key: {{ wireguard_client_key_auto }}
+        wireguard_client_pubkey: {{ wireguard_client_pubkey_auto }}
+
+  - name: Fetch /tmp/wg_server.yaml
+    fetch:
+      src: "/tmp/wg_server.yaml"
+      dest: "{{ local_destintation_files }}/wg_server.yaml"
+      flat: true
+
+  - name: compose client config
+    template:
+      src: client.conf.j2
+      dest: /tmp/wg_client.conf
+
+  - name: Fetch client configuration
+    fetch:
+      src: "/tmp/wg_client.conf"
+      dest: "{{ local_destintation_files }}/{{ wg_client_config_fname }}"
+      flat: true
+
+################################################################################
+################## end interventions on local drive ############################
+################################################################################
+  - name: "umount {{ wg_mountpoint }} "
+    ansible.builtin.command:
+      cmd: "umount {{ wg_mountpoint }} "
+      warn: false
+    register: umount
