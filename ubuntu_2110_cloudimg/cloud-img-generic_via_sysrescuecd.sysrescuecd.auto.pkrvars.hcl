@@ -1,0 +1,1 @@
+../common-pkr/cloud-img-generic_via_sysrescuecd.sysrescuecd.auto.pkrvars.hcl
