@@ -44,10 +44,6 @@ variable "iso_storage_pool" {
   type = string
 }
 
-variable "iso_boot_command" {
-  type = list(string)
-}
-
 variable "ssh_username" {
   type = string
 }
@@ -240,7 +236,7 @@ source "proxmox-iso" "VM" {
   iso_storage_pool = "${var.iso_storage_pool}"
   iso_checksum     = "${var.iso_checksum}"
   iso_url          = "${var.iso_url}"
-  boot_command     = "${var.iso_boot_command}"
+  boot_command     = "${local.iso_boot_command}"
 
   ###################################################################################
   # TODO: there is no way in packer plugin for making this an ephemeral drive
