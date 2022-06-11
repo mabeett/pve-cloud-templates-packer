@@ -131,6 +131,11 @@ variable "vm_serial_device" {
   default = "serial0"
 }
 
+variable "vm_pool" {
+  type    = string
+  default = ""
+}
+
 ############################ cloud init fake drive  ###########################
 ###########  for starting guest OS and running there some operations ##########
 variable "temp_cinit_iso_checksum" {
@@ -268,6 +273,7 @@ source "proxmox-iso" "VM" {
   template_description = "${var.template_description} - built on ${timestamp()}"
   template_name        = "${var.template_name}"
   vm_id                = "${var.vm_id}"
+  pool                 = "${var.vm_pool}"
 }
 
 build {
