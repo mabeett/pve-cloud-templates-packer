@@ -44,10 +44,6 @@ variable "iso_storage_pool" {
   type = string
 }
 
-variable "iso_boot_command" {
-  type = list(string)
-}
-
 variable "ssh_username" {
   type = string
 }
@@ -133,6 +129,11 @@ variable "vm_net_bridge" {
 variable "vm_serial_device" {
   type    = string
   default = "serial0"
+}
+
+variable "vm_pool" {
+  type    = string
+  default = ""
 }
 
 ############################ cloud init fake drive  ###########################
@@ -240,7 +241,7 @@ source "proxmox-iso" "VM" {
   iso_storage_pool = "${var.iso_storage_pool}"
   iso_checksum     = "${var.iso_checksum}"
   iso_url          = "${var.iso_url}"
-  boot_command     = "${var.iso_boot_command}"
+  boot_command     = "${local.iso_boot_command}"
 
   ###################################################################################
   # TODO: there is no way in packer plugin for making this an ephemeral drive
@@ -272,6 +273,7 @@ source "proxmox-iso" "VM" {
   template_description = "${var.template_description} - built on ${timestamp()}"
   template_name        = "${var.template_name}"
   vm_id                = "${var.vm_id}"
+  pool                 = "${var.vm_pool}"
 }
 
 build {

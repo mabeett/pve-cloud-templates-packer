@@ -7,4 +7,6 @@ proxmox_user        = "root@pam!packer-builder"
 proxmox_api_user    = "root@pam"
 proxmox_token_id    = "packer-test"
 proxmox_token       = "beefbeef-beef-beef-beef-beefbeefbeef"
-cloud_init_ssh_keys = "'ssh-rsa AAAA...B3NzaC1yc2EAAAADAQ== foo@esample'"
+cloud_init_ssh_keys = "'ssh-rsa AAAA...B3NzaC1yc2EAAAADAQ== foo@example'"
+
+vm_pool             = "templates"
