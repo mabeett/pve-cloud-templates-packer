@@ -33,7 +33,7 @@ This development has been made with
 
 - bash
 - [cloud-localds](https://code.launchpad.net/cloud-utils) tool from [cloud-image-utils](https://packages.ubuntu.com/impish/cloud-image-utils) ubuntu package.
-- Packer 1.7.10
+- Packer 1.8.1
 - Ansible 2.10.5
  - `netaddr` python package installed in the controller.
 - Proxmox PVE 7.1 with his API token.
