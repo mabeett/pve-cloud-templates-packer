@@ -1,13 +1,17 @@
 # Cloud Images templates for Proxmox PVE via packer
 
+Fresh cloud images KVM Virtual Machine templates for proxmox Virtual Environment.
+
 ## Context
+
+
 
 [Proxmox Virtual Environment](https://www.proxmox.com/en/proxmox-ve) (PVE) supports Cloud-init [[1](https://pve.proxmox.com/pve-docs/pve-admin-guide.html#qm_cloud_init)][[2](https://pve.proxmox.com/wiki/Cloud-Init_Support)] for KVM Virtual Machines (VM).
 
 PVE provides a [REST API](https://pve.proxmox.com/wiki/Proxmox_VE_API).
 
 Currently the REST API does not offer importing hard drive images.
-There are instructions for preparing Cloud-Init ready templates in proxmox using the node shell interface [[1](https://pve.proxmox.com/pve-docs/pve-admin-guide.html#qm_cloud_init)][[2](https://pve.proxmox.com/wiki/Cloud-Init_Support)].
+There are instructions for preparing Cloud-Init ready templates in PVE using the node shell interface [[1](https://pve.proxmox.com/pve-docs/pve-admin-guide.html#qm_cloud_init)][[2](https://pve.proxmox.com/wiki/Cloud-Init_Support)].
 
 Packer offers a [community plugin](https://www.packer.io/plugins/builders/proxmox/iso) for PVE.
 
@@ -15,17 +19,43 @@ This project uses the packer plugin for PVE and Ansible provisioner for starting
 
 Since packer's plugin lacks of some features related to VM setup, this ones are done via [proxmox_kvm module](https://docs.ansible.com/ansible/latest/collections/community/general/proxmox_kvm_module.html#ansible-collections-community-general-proxmox-kvm-module) provided by Ansible's community collection.
 
-## How does this work?
+### Details
+
+```
+
+  ┌───────────────────────────────────┐
+  │ ┌──────────────────────┐          │
+  │ │ Ansible              │          │
+  │ └─────────┬────────────┘          │
+  │           │  Packer - proxmox iso │
+  └─────┬─────┼───────────────────────┘
+        │     │                   .-~~~-.
+  ┌─────▼─────┼───────┐   .- ~ ~-(       )_ _
+  │           │       │  /                     ~ -.
+  │           │       │ |  CloudIMG 4 OpenStack     \
+  │  ┌────────▼────┐  │  \        ▲                .'
+  │  │             │  │    ~- . __│____│_____ . -~
+  │  │ SysRescueCD ├──┼───────────┘    │
+  │  └─────────────┘  │                │
+  │                   │                │
+  │ ┌───────────────┐ │                │
+  │ │  VM Disk      │ │                │
+  │ │               ◄─┼────────────────┘
+  │ └───────────────┘ │
+  │                VM │
+  └───────────────────┘
+
+```
 
 Each packer subproject uses [proxmox-iso](https://www.packer.io/plugins/builders/proxmox/iso) builder.
 
-Instead of booting with the target distro installer and using boot commands for launching a kickstart/preseed file the bootup is made with SystemRescueCD.
+Instead of booting with the target distro installer the bootup is made with SystemRescueCD.
 
-Theno, via Ansible provisioner QEMU-IMG is used for copying a cloud-ready OS content with all his packages and setup (as it would be dd).
+Then, via Ansible provisioner QEMU-IMG is used for copying a cloud-ready OS content with all his packages and setup (as it would be dd).
 
-Since some cloud-images does not have [QEMU Guest Agent installed](https://www.qemu.org/docs/master/interop/qemu-ga.html) the VM is restarted, thn the provisioner is connected to the target OS for installing the package. A custom ISO image is created with the same login credentials used for SystemRescueCD in order to make the login available and compatible with the target OS.
+Since some cloud-images does not have [QEMU Guest Agent installed](https://www.qemu.org/docs/master/interop/qemu-ga.html) the VM is restarted, the provisioner is connected to the target OS for installing the package. A custom cloud-init ISO image is created with the same login credentials used for SystemRescueCD in order to make the login available and compatible with the target OS.
 
-Packer proxmox builder cannot make some VM setups as serial drive, then Ansible is used for solving it.
+Packer proxmox builder cannot make some VM setups as serial drive, so Ansible is used for solving it.
 
 ## Requirements
 
@@ -43,22 +73,27 @@ This development has been made with
 - `README.md`: This file
 - `ubuntu_2004_cloudimg/`: packer directory for building ubuntu focal cloud-img.
 - `ubuntu_2004_minimal/`: packer directory for building ubuntu focal minimal cloud-img.
+- `ubuntu_2110_cloudimg/`: packer directory for building ubuntu impish cloud-img.
+- `ubuntu_2110_minimal/`: packer directory for building ubuntu impish minimal cloud-img.
+- `ubuntu_2204_cloudimg/`: packer directory for building ubuntu jammy cloud-img
+- `ubuntu_2204_minimal/`: packer directory for building ubuntu jammy minimal cloud-img.
 - `debian_11_generic/`: packer directory for building debian bullseye cloud image.
 - `debian_11_genericcloud/`: packer directory for building debian bullseye smaller cloud image.
+- `openwrt_2102/`: packer directory for building OpenWRT 21.02 VM.
 - `common-pkr/`: common code for the previous dirs.
 - `ansible/`: Ansible's playbooks used for the previous packer projects.
-- `TODO`: possible and certain next steps.
+- `TODO.md`: possible and certain next steps.
 
 ## Use
 
-- Install the required software as Packer or Ansible.
+- Install the required software as Packer and Ansible.
 - Generate your API token for proxmox PVE.
 - setup your `common-pkr/cloud-img-generic_via_sysrescuecd.private.auto.pkrvars.hcl` file with your credentials, you may read the example file.
 - read and setup local files for the packer directory involved. Edit/generate `*.auto.pkrvars.hcl` or `variables.local.sh`, you may see the example files.
 - execute build script
 
 ```
-export distro="ubuntu_2004_cloudimg"
+export distro="ubuntu_2204_cloudimg"
 cd ${distro}/
 bash build.sh
 ```
@@ -71,7 +106,7 @@ You may make symbolic links to files from [common-pkr](common-pkr/) directory as
 
 ## Know bugs and Future work
 
-See [TODO](TODO) file.
+See [TODO](TODO.md) file.
 
 ## Other work
 
