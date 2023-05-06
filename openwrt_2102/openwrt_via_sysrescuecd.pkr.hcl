@@ -273,10 +273,7 @@ source "proxmox-iso" "VM" {
   cores  = "${var.vm_cores}"
   memory = "${var.vm_memory}"
 
-  # PLACEHOLDER: serial_port
-  ## packer plugin does not soport setupt for serial port
-  ## device. Workaround: ansible.
-  # https://github.com/hashicorp/packer-plugin-proxmox/issues/41
+  serials = ["socket"]
   vga {
     type = "${var.vm_serial_device}"
   }
@@ -343,8 +340,7 @@ build {
       "-e cloud_init_ipconfig=${var.cloud_init_ipconfig} ",
       "-e cloud_init_ssh_keys=${var.cloud_init_ssh_keys} ",
       "-e vm_id=${var.vm_id} ",
-      "-e wireguard_server_listen_port=${var.wireguard_server_listen_port} ",
-      "-e vm_serial_device=${var.vm_serial_device}"
+      "-e wireguard_server_listen_port=${var.wireguard_server_listen_port} "
     ]
   }
 
