@@ -59,10 +59,6 @@ variable "vm_disk_storage_pool" {
   type = string
 }
 
-variable "vm_disk_storage_pool_type" {
-  type = string
-}
-
 variable "vm_disk_type" {
   type    = string
   default = "scsi"
@@ -287,12 +283,11 @@ source "proxmox-iso" "VM" {
 
   scsi_controller = "${var.vm_scsi_controller}"
   disks {
-    disk_size         = "${var.vm_disk_size}"
-    format            = "${var.vm_disk_format}"
-    storage_pool      = "${var.vm_disk_storage_pool}"
-    storage_pool_type = "${var.vm_disk_storage_pool_type}"
-    type              = "${var.vm_disk_type}"
-    io_thread         = "${var.vm_disk_io_thread}"
+    disk_size    = "${var.vm_disk_size}"
+    format       = "${var.vm_disk_format}"
+    storage_pool = "${var.vm_disk_storage_pool}"
+    type         = "${var.vm_disk_type}"
+    io_thread    = "${var.vm_disk_io_thread}"
   }
 
   ## use in case of having the file
