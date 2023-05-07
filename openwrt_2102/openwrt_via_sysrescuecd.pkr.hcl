@@ -142,6 +142,10 @@ variable "vm_serial_device" {
   default = "serial0"
 }
 
+variable "vm_pool" {
+  type    = string
+  default = ""
+}
 
 variable "guest_os_startup_validation_port" {
   type = number
