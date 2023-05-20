@@ -134,11 +134,15 @@ variable "vm_pool" {
 
 ############################ cloud init fake drive  ###########################
 ###########  for starting guest OS and running there some operations ##########
-variable "temp_cinit_iso_checksum" {
+variable "temp_cinit_net_config_file" {
   type = string
 }
 
-variable "temp_cinit_iso_url" {
+variable "temp_cinit_user_data_file" {
+  type = string
+}
+
+variable "temp_cinit_meta_data_file" {
   type = string
 }
 
@@ -228,25 +232,25 @@ source "proxmox-iso" "VM" {
 
   ## use in case of having the file
   iso_file = "${var.iso_file}"
+
+  # cloud-init ephemeral device
+  additional_iso_files {
+    device           = "${var.temp_cinit_device}"
+    iso_storage_pool = "${var.temp_cinit_iso_storage_pool}"
+    cd_label         = "cidata"
+    cd_files = [
+      "${var.temp_cinit_net_config_file}",
+      "${var.temp_cinit_user_data_file}",
+      "${var.temp_cinit_meta_data_file}"
+    ]
+    unmount = true
+  }
   # Use in case of no having the file
   unmount_iso      = true
   iso_storage_pool = "${var.iso_storage_pool}"
   iso_checksum     = "${var.iso_checksum}"
   iso_url          = "${var.iso_url}"
   boot_command     = "${local.iso_boot_command}"
-
-  ###################################################################################
-  # TODO: there is no way in packer plugin for making this an ephemeral drive
-  # TODO: follow-up this PR https://github.com/hashicorp/packer-plugin-proxmox/pull/33
-  additional_iso_files {
-    # https://www.packer.io/plugins/builders/proxmox/iso#additional_iso_files
-    unmount          = true
-    device           = "${var.temp_cinit_device}"
-    iso_storage_pool = "${var.temp_cinit_iso_storage_pool}"
-    iso_checksum     = "${var.temp_cinit_iso_checksum}"
-    iso_url          = "${var.temp_cinit_iso_url}"
-  }
-  ###################################################################################
 
   network_adapters {
     firewall    = false
