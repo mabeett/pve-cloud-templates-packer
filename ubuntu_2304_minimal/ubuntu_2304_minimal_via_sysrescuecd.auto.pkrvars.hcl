@@ -10,14 +10,14 @@ vm_disk_io_thread    = true
 
 # CPU & Memory
 vm_cores  = "1"
-vm_memory = "1024"
+vm_memory = "4096"
 
 # OS
-cloud_img_url   = "https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64.img"
+cloud_img_url   = "https://cloud-images.ubuntu.com/minimal/daily/lunar/current/lunar-minimal-cloudimg-amd64.img"
 cloud_init_user = "ubuntu"
 
 # VM description
-vm_name              = "ubuntu-2204-cloudimg-template-WIP"
-template_name        = "ubuntu-2204-cloudimg"
-template_description = "Ubuntu 22.04 via packer"
-vm_id                = 1000006
+vm_name              = "ubuntu-2304-cloudimg-minimal-template-WIP"
+template_name        = "ubuntu-2304-cloudimg-minimal"
+template_description = "Ubuntu 23.04 (Lunar Lobster) minimal via packer"
+vm_id                = 1000011

@@ -86,10 +86,6 @@ EOF
 clean_tmp(){
     exval=${?}
     rm -rf ${TMPDIR}
-    # TODO: delete temp iso cloud init drive from proxmox.
-    >&2 echo "TODO: delete iso generated drive"
-    >&2 echo " storage: ${PKR_VAR_temp_cinit_iso_storage_pool}"
-    >&2 echo " iso    : ${CI_FILE}"
     exit ${exval}
 }
 
@@ -102,12 +98,9 @@ get_network_config  "${TMPDIR}/network-config"
 get_user_data       "${TMPDIR}/user-data"
 get_meta_data       "${TMPDIR}/meta-data"
 
-# cloud-localds -v --network-config  network-config            --filesystem iso output        user-data              meta-data
-cloud-localds   -v --network-config "${TMPDIR}/network-config" --filesystem iso "${TMPDIR}/${CI_FILE}"  "${TMPDIR}/user-data" "${TMPDIR}/meta-data"
-
-shasum=$(sha256sum "${TMPDIR}/${CI_FILE}" | awk '{print "sha256:"$1}')
-export PKR_VAR_temp_cinit_iso_checksum="${shasum}"
-export PKR_VAR_temp_cinit_iso_url="file://$(pwd)/${TMPDIR}/${CI_FILE}"
+export PKR_VAR_temp_cinit_net_config_file="${TMPDIR}/network-config"
+export PKR_VAR_temp_cinit_user_data_file="${TMPDIR}/user-data"
+export PKR_VAR_temp_cinit_meta_data_file="${TMPDIR}/meta-data"
 
 time packer validate .
 time packer build .

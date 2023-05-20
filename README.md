@@ -62,11 +62,11 @@ Packer proxmox builder cannot make some VM setups as serial drive, so Ansible is
 This development has been made with
 
 - bash
-- [cloud-localds](https://code.launchpad.net/cloud-utils) tool from [cloud-image-utils](https://packages.ubuntu.com/impish/cloud-image-utils) ubuntu package.
-- Packer 1.8.1
+- `mkisofs` (via [genisoimage](https://packages.ubuntu.com/jammy/genisoimage) ubuntu package).
+- Packer 1.8.6
 - Ansible 2.10.5
  - `netaddr` python package installed in the controller.
-- Proxmox PVE 7.1 with his API token.
+- Proxmox PVE 7.4 with his API token.
 
 ## Content
 

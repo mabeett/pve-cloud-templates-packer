@@ -59,10 +59,6 @@ variable "vm_disk_storage_pool" {
   type = string
 }
 
-variable "vm_disk_storage_pool_type" {
-  type = string
-}
-
 variable "vm_disk_type" {
   type    = string
   default = "scsi"
@@ -146,6 +142,10 @@ variable "vm_serial_device" {
   default = "serial0"
 }
 
+variable "vm_pool" {
+  type    = string
+  default = ""
+}
 
 variable "guest_os_startup_validation_port" {
   type = number
@@ -277,22 +277,18 @@ source "proxmox-iso" "VM" {
   cores  = "${var.vm_cores}"
   memory = "${var.vm_memory}"
 
-  # PLACEHOLDER: serial_port
-  ## packer plugin does not soport setupt for serial port
-  ## device. Workaround: ansible.
-  # https://github.com/hashicorp/packer-plugin-proxmox/issues/41
+  serials = ["socket"]
   vga {
     type = "${var.vm_serial_device}"
   }
 
   scsi_controller = "${var.vm_scsi_controller}"
   disks {
-    disk_size         = "${var.vm_disk_size}"
-    format            = "${var.vm_disk_format}"
-    storage_pool      = "${var.vm_disk_storage_pool}"
-    storage_pool_type = "${var.vm_disk_storage_pool_type}"
-    type              = "${var.vm_disk_type}"
-    io_thread         = "${var.vm_disk_io_thread}"
+    disk_size    = "${var.vm_disk_size}"
+    format       = "${var.vm_disk_format}"
+    storage_pool = "${var.vm_disk_storage_pool}"
+    type         = "${var.vm_disk_type}"
+    io_thread    = "${var.vm_disk_io_thread}"
   }
 
   ## use in case of having the file
@@ -348,8 +344,7 @@ build {
       "-e cloud_init_ipconfig=${var.cloud_init_ipconfig} ",
       "-e cloud_init_ssh_keys=${var.cloud_init_ssh_keys} ",
       "-e vm_id=${var.vm_id} ",
-      "-e wireguard_server_listen_port=${var.wireguard_server_listen_port} ",
-      "-e vm_serial_device=${var.vm_serial_device}"
+      "-e wireguard_server_listen_port=${var.wireguard_server_listen_port} "
     ]
   }
 
