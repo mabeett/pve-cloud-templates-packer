@@ -79,6 +79,8 @@ This development has been made with
 - `ubuntu_2204_minimal/`: packer directory for building ubuntu jammy minimal cloud-img.
 - `debian_11_generic/`: packer directory for building debian bullseye cloud image.
 - `debian_11_genericcloud/`: packer directory for building debian bullseye smaller cloud image.
+- `debian_12_generic/`: packer directory for building debian Bookworm cloud image.
+- `debian_12_genericcloud/`: packer directory for building debian Bookworm smaller cloud image.
 - `openwrt_2102/`: packer directory for building OpenWRT 21.02 VM.
 - `common-pkr/`: common code for the previous dirs.
 - `ansible/`: Ansible's playbooks used for the previous packer projects.
