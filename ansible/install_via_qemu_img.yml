@@ -45,6 +45,7 @@
     poll: 0
     async: 45000
     register: g_st
+    when: growpart_after_qemuimg | default(True) | bool
 
   - name: Check status of growpart task
     async_status:
@@ -52,3 +53,4 @@
     register: job_result
     until: job_result.finished
     retries: "{{ wait_growpart | default(1800) }}"
+    when: growpart_after_qemuimg | default(True) | bool
