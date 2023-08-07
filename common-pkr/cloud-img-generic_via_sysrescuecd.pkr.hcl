@@ -95,6 +95,11 @@ variable "vm_guest_disk_drive" {
 }
 
 ########### CPU and memory  ###########
+variable "cpu_type" {
+  type    = string
+  default = ""
+}
+
 variable "vm_cores" {
   type    = string
   default = "2"
@@ -213,8 +218,9 @@ source "proxmox-iso" "VM" {
   cloud_init              = "true"
   cloud_init_storage_pool = "local-zfs"
 
-  cores  = "${var.vm_cores}"
-  memory = "${var.vm_memory}"
+  cpu_type = "${var.cpu_type}"
+  cores    = "${var.vm_cores}"
+  memory   = "${var.vm_memory}"
 
   serials = ["socket"]
   vga {
