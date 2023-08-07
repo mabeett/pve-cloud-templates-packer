@@ -10,3 +10,5 @@ proxmox_token       = "beefbeef-beef-beef-beef-beefbeefbeef"
 cloud_init_ssh_keys = "'ssh-rsa AAAA...B3NzaC1yc2EAAAADAQ== foo@example'"
 
 vm_pool             = "templates"
+
+cpu_type            = "Westmere"

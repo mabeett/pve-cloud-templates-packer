@@ -1,3 +1,6 @@
+# this file is inspired in cloud-img-generic_via_sysrescuecd.pkr.hcl
+# The idea is jus generating a template only with qemu-img, no updates,
+# no hacks.
 ########################## proxmox login credentials ##########################
 variable "proxmox_node" {
   type = string
@@ -281,57 +284,58 @@ source "proxmox-iso" "VM" {
 build {
   sources = ["source.proxmox-iso.VM"]
 
-  provisioner "ansible" {
-    playbook_file = "../ansible/proxmox_cloud_init_config.yml"
-    user          = "${var.ssh_username}"
-    extra_arguments = [
-      # "-vv",
-      "-e ansible_python_interpreter=/usr/bin/python3.10",
-      "-e proxmox_api_host=${var.proxmox_api_host} ",
-      "-e proxmox_node=${var.proxmox_node} ",
-      "-e proxmox_api_user=${var.proxmox_api_user} ",
-      "-e proxmox_token_id=${var.proxmox_token_id} ",
-      "-e proxmox_token=${var.proxmox_token} ",
-      "-e cloud_init_user=${var.cloud_init_user} ",
-      "-e cloud_init_password=${var.ssh_password} ",
-      "-e cloud_init_ipconfig=${var.cloud_init_ipconfig} ",
-      "-e cloud_init_ssh_keys=${var.cloud_init_ssh_keys} ",
-      "-e vm_id=${var.vm_id} "
-    ]
-  }
+  # provisioner "ansible" {
+  #   playbook_file = "../ansible/proxmox_cloud_init_config.yml"
+  #   user          = "${var.ssh_username}"
+  #   extra_arguments = [
+  #     # "-vv",
+  #     "-e ansible_python_interpreter=/usr/bin/python3.10",
+  #     "-e proxmox_api_host=${var.proxmox_api_host} ",
+  #     "-e proxmox_node=${var.proxmox_node} ",
+  #     "-e proxmox_api_user=${var.proxmox_api_user} ",
+  #     "-e proxmox_token_id=${var.proxmox_token_id} ",
+  #     "-e proxmox_token=${var.proxmox_token} ",
+  #     "-e cloud_init_user=${var.cloud_init_user} ",
+  #     "-e cloud_init_password=${var.ssh_password} ",
+  #     "-e cloud_init_ipconfig=${var.cloud_init_ipconfig} ",
+  #     "-e cloud_init_ssh_keys=${var.cloud_init_ssh_keys} ",
+  #     "-e vm_id=${var.vm_id} "
+  #   ]
+  # }
 
   provisioner "ansible" {
     playbook_file = "../ansible/install_via_qemu_img.yml"
     user          = "${var.ssh_username}"
     extra_arguments = [
-      # "-vv",
+      "-vv",
       "-e ansible_python_interpreter=/usr/bin/python3.10",
       "-e cloud_img_url=${var.cloud_img_url} ",
+      "-e growpart_after_qemuimg=false",
       "-e vm_disk=${var.vm_guest_disk_drive} "
     ]
   }
 
-  provisioner "shell" {
-    inline = ["bash -c 'nohup systemctl reboot 2>&1 1>/dev/null &'"]
-  }
+  # provisioner "shell" {
+  #   inline = ["bash -c 'nohup systemctl reboot 2>&1 1>/dev/null &'"]
+  # }
 
-  provisioner "ansible" {
-    playbook_file = "../ansible/cloud_init.yml"
-    user          = "${var.ssh_username}"
-    extra_arguments = [
-      # "-vv",
-      "-e ssh_root_login_file='${var.ssh_root_login_file}' ",
-      "-e vm_host=${build.Host} ",
-      "-e vm_validate_port=${var.guest_os_startup_validation_port} "
-    ]
-  }
+  # provisioner "ansible" {
+  #   playbook_file = "../ansible/cloud_init.yml"
+  #   user          = "${var.ssh_username}"
+  #   extra_arguments = [
+  #     # "-vv",
+  #     "-e ssh_root_login_file='${var.ssh_root_login_file}' ",
+  #     "-e vm_host=${build.Host} ",
+  #     "-e vm_validate_port=${var.guest_os_startup_validation_port} "
+  #   ]
+  # }
 
-  provisioner "shell" {
-    environment_vars = [
-      "TEMPLATE_NAME=${var.template_name}"
-    ]
-    scripts = [
-      "clean_files.sh"
-    ]
-  }
+  # provisioner "shell" {
+  #   environment_vars = [
+  #     "TEMPLATE_NAME=${var.template_name}"
+  #   ]
+  #   scripts = [
+  #     "clean_files.sh"
+  #   ]
+  # }
 }
