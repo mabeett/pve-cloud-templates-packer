@@ -12,6 +12,20 @@
       name: proxmoxer
       state: present
     become: yes
+    ignore_errors: true
+    register: install_proxmoxer
+
+  - name: install dependency for pip
+    ansible.builtin.command: pacman --noconfirm  -Sy python-setuptools
+    when: install_proxmoxer is failed
+
+  - name: Install proxmoxer pip package
+    ansible.builtin.pip:
+      # https://pypi.org/project/docker-compose/#history
+      name: proxmoxer
+      state: present
+    become: yes
+    when: install_proxmoxer is failed
 
   - name: Update cloud-init VM config
     community.general.proxmox_kvm:
