@@ -13,7 +13,9 @@ cpu_type  = "Westmere"
 vm_cores  = "1"
 vm_memory = "1024"
 
+# systemrescuecd will start without serial
 vm_serial_device = "qxl"
+iso_boot_command_suffix = ""
 
 # OS
 # cloud_img_url = "http://192.168.0.21/cloud-images/OL9U2_x86_64-kvm-b197.qcow"
