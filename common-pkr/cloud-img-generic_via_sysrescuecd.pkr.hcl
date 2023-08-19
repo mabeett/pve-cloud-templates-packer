@@ -286,7 +286,6 @@ build {
     user          = "${var.ssh_username}"
     extra_arguments = [
       # "-vv",
-      "-e ansible_python_interpreter=/usr/bin/python3",
       "-e proxmox_api_host=${var.proxmox_api_host} ",
       "-e proxmox_node=${var.proxmox_node} ",
       "-e proxmox_api_user=${var.proxmox_api_user} ",
@@ -305,7 +304,6 @@ build {
     user          = "${var.ssh_username}"
     extra_arguments = [
       # "-vv",
-      "-e ansible_python_interpreter=/usr/bin/python3",
       "-e cloud_img_url=${var.cloud_img_url} ",
       "-e vm_disk=${var.vm_guest_disk_drive} "
     ]
@@ -320,6 +318,7 @@ build {
     user          = "${var.ssh_username}"
     extra_arguments = [
       # "-vv",
+      "-e ansible_python_interpreter=/usr/bin/python3",
       "-e ssh_root_login_file='${var.ssh_root_login_file}' ",
       "-e vm_host=${build.Host} ",
       "-e vm_validate_port=${var.guest_os_startup_validation_port} "

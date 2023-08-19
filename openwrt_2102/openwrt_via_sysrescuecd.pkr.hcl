@@ -333,7 +333,6 @@ build {
     user          = "${var.ssh_username}"
     extra_arguments = [
       # "-vv",
-      "-e ansible_python_interpreter=/usr/bin/python3.10",
       "-e proxmox_api_host=${var.proxmox_api_host} ",
       "-e proxmox_node=${var.proxmox_node} ",
       "-e proxmox_api_user=${var.proxmox_api_user} ",
@@ -353,7 +352,7 @@ build {
     user          = "${var.ssh_username}"
     extra_arguments = [
       # "-vv",
-      "-e ansible_python_interpreter=/usr/bin/python3.10",
+      "-e ansible_python_interpreter=/usr/bin/python3",
       "-e cloud_img_url=${var.cloud_img_url} ",
       "-e root_password=${var.ssh_password}",
       "-e vm_disk=${var.vm_guest_disk_drive} "
@@ -365,7 +364,7 @@ build {
     user          = "${var.ssh_username}"
     extra_arguments = [
       # "-vv",
-      "-e ansible_python_interpreter=/usr/bin/python3.10",
+      "-e ansible_python_interpreter=/usr/bin/python3",
       "-e cloud_img_url=${var.cloud_img_url} ",
       "-e root_password=${var.ssh_password}",
       "-e net_lan_netmask=${var.net_lan_netmask}",
