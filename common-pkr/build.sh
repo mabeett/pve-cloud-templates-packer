@@ -68,7 +68,7 @@ package_upgrade: ${package_upgrade}
 runcmd:
   - echo 'PermitRootLogin yes' > ${root_login_file}
   - service sshd restart
-  - bash -c 'cd /opt/ && sudo -u www-data nohup python3 -m http.server ${vm_validate_port} 2>&1 1>/dev/null &'
+  - bash -c 'cd /opt/ && sudo -u nobody nohup python3 -m http.server ${vm_validate_port} 2>&1 1>/dev/null &'
 ssh:
   emit_keys_to_console: false
 no_ssh_fingerprints: true
