@@ -284,6 +284,8 @@ source "proxmox-iso" "VM" {
 build {
   sources = ["source.proxmox-iso.VM"]
 
+  ## Current community.general collection does not handle cloud-init properly
+  # https://github.com/ansible-collections/community.general/issues/7136
   # provisioner "ansible" {
   #   playbook_file = "../ansible/proxmox_cloud_init_config.yml"
   #   user          = "${var.ssh_username}"

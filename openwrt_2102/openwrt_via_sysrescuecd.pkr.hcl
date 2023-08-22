@@ -328,24 +328,25 @@ source "proxmox-iso" "VM" {
 build {
   sources = ["source.proxmox-iso.VM"]
 
-  provisioner "ansible" {
-    playbook_file = "../ansible/proxmox_cloud_init_config.yml"
-    user          = "${var.ssh_username}"
-    extra_arguments = [
-      # "-vv",
-      "-e proxmox_api_host=${var.proxmox_api_host} ",
-      "-e proxmox_node=${var.proxmox_node} ",
-      "-e proxmox_api_user=${var.proxmox_api_user} ",
-      "-e proxmox_token_id=${var.proxmox_token_id} ",
-      "-e proxmox_token=${var.proxmox_token} ",
-      "-e cloud_init_user=${var.cloud_init_user} ",
-      "-e cloud_init_password=${var.ssh_password} ",
-      "-e cloud_init_ipconfig=${var.cloud_init_ipconfig} ",
-      "-e cloud_init_ssh_keys=${var.cloud_init_ssh_keys} ",
-      "-e vm_id=${var.vm_id} ",
-      "-e wireguard_server_listen_port=${var.wireguard_server_listen_port} "
-    ]
-  }
+  # https://github.com/ansible-collections/community.general/issues/7136
+  # provisioner "ansible" {
+  #   playbook_file = "../ansible/proxmox_cloud_init_config.yml"
+  #   user          = "${var.ssh_username}"
+  #   extra_arguments = [
+  #     # "-vv",
+  #     "-e proxmox_api_host=${var.proxmox_api_host} ",
+  #     "-e proxmox_node=${var.proxmox_node} ",
+  #     "-e proxmox_api_user=${var.proxmox_api_user} ",
+  #     "-e proxmox_token_id=${var.proxmox_token_id} ",
+  #     "-e proxmox_token=${var.proxmox_token} ",
+  #     "-e cloud_init_user=${var.cloud_init_user} ",
+  #     "-e cloud_init_password=${var.ssh_password} ",
+  #     "-e cloud_init_ipconfig=${var.cloud_init_ipconfig} ",
+  #     "-e cloud_init_ssh_keys=${var.cloud_init_ssh_keys} ",
+  #     "-e vm_id=${var.vm_id} ",
+  #     "-e wireguard_server_listen_port=${var.wireguard_server_listen_port} "
+  #   ]
+  # }
 
   provisioner "ansible" {
     playbook_file = "../ansible/install_openwrt.yml"
