@@ -9,20 +9,27 @@
   - name: Install proxmoxer pip package
     ansible.builtin.pip:
       # https://pypi.org/project/docker-compose/#history
-      name: proxmoxer
+      name:
+        - proxmoxer
+        - requests
       state: present
     become: yes
     ignore_errors: true
     register: install_proxmoxer
 
   - name: install dependency for pip
-    ansible.builtin.command: pacman --noconfirm  -Sy python-setuptools
+    community.general.pacman:
+      name: python-setuptools
+      state: present
+      update_cache: true
     when: install_proxmoxer is failed
 
   - name: Install proxmoxer pip package
     ansible.builtin.pip:
       # https://pypi.org/project/docker-compose/#history
-      name: proxmoxer
+      name:
+        - proxmoxer
+        - requests
       state: present
     become: yes
     when: install_proxmoxer is failed
