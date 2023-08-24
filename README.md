@@ -73,8 +73,6 @@ This development has been made with
 - `README.md`: This file
 - `ubuntu_2004_cloudimg/`: packer directory for building ubuntu focal cloud-img.
 - `ubuntu_2004_minimal/`: packer directory for building ubuntu focal minimal cloud-img.
-- `ubuntu_2110_cloudimg/`: packer directory for building ubuntu impish cloud-img.
-- `ubuntu_2110_minimal/`: packer directory for building ubuntu impish minimal cloud-img.
 - `ubuntu_2204_cloudimg/`: packer directory for building ubuntu jammy cloud-img
 - `ubuntu_2204_minimal/`: packer directory for building ubuntu jammy minimal cloud-img.
 - `debian_11_generic/`: packer directory for building debian bullseye cloud image.
