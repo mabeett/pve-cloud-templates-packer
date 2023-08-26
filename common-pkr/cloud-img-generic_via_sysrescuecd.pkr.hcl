@@ -190,6 +190,18 @@ variable "cloud_img_url" {
   type        = string
 }
 
+variable "vm_growpart_after_qemuimg" {
+  description = "defines if growroot partition with growpart - used in ansible"
+  type        = string
+  default     = "true"
+}
+
+variable "vm_growpart_root_part_number" {
+  description = "Partition number to be resize after disk dump depends on vm_growpart_after_qemuimg"
+  type        = number
+  default     = 1
+}
+
 variable "vm_name" {
   type = string
 }
@@ -272,7 +284,7 @@ source "proxmox-iso" "VM" {
   ssh_password = "${var.ssh_password}"
 
   vm_name              = "${var.vm_name}"
-  template_description = "${var.template_description} - built on ${timestamp()}"
+  template_description = "${var.template_description}\n\n---\n\nbuilt via [pve-cloud-templates-packer](https://github.com/mabeett/pve-cloud-templates-packer) (or a fork)\n\n${timestamp()}"
   template_name        = "${var.template_name}"
   vm_id                = "${var.vm_id}"
   pool                 = "${var.vm_pool}"
@@ -281,32 +293,34 @@ source "proxmox-iso" "VM" {
 build {
   sources = ["source.proxmox-iso.VM"]
 
-  provisioner "ansible" {
-    playbook_file = "../ansible/proxmox_cloud_init_config.yml"
-    user          = "${var.ssh_username}"
-    extra_arguments = [
-      # "-vv",
-      "-e ansible_python_interpreter=/usr/bin/python3",
-      "-e proxmox_api_host=${var.proxmox_api_host} ",
-      "-e proxmox_node=${var.proxmox_node} ",
-      "-e proxmox_api_user=${var.proxmox_api_user} ",
-      "-e proxmox_token_id=${var.proxmox_token_id} ",
-      "-e proxmox_token=${var.proxmox_token} ",
-      "-e cloud_init_user=${var.cloud_init_user} ",
-      "-e cloud_init_password=${var.ssh_password} ",
-      "-e cloud_init_ipconfig=${var.cloud_init_ipconfig} ",
-      "-e cloud_init_ssh_keys=${var.cloud_init_ssh_keys} ",
-      "-e vm_id=${var.vm_id} "
-    ]
-  }
+  ## Current community.general collection does not handle cloud-init properly
+  # https://github.com/ansible-collections/community.general/issues/7136
+  # provisioner "ansible" {
+  #   playbook_file = "../ansible/proxmox_cloud_init_config.yml"
+  #   user          = "${var.ssh_username}"
+  #   extra_arguments = [
+  #     # "-vv",
+  #     "-e proxmox_api_host=${var.proxmox_api_host} ",
+  #     "-e proxmox_node=${var.proxmox_node} ",
+  #     "-e proxmox_api_user=${var.proxmox_api_user} ",
+  #     "-e proxmox_token_id=${var.proxmox_token_id} ",
+  #     "-e proxmox_token=${var.proxmox_token} ",
+  #     "-e cloud_init_user=${var.cloud_init_user} ",
+  #     "-e cloud_init_password=${var.ssh_password} ",
+  #     "-e cloud_init_ipconfig=${var.cloud_init_ipconfig} ",
+  #     "-e cloud_init_ssh_keys=${var.cloud_init_ssh_keys} ",
+  #     "-e vm_id=${var.vm_id} "
+  #   ]
+  # }
 
   provisioner "ansible" {
     playbook_file = "../ansible/install_via_qemu_img.yml"
     user          = "${var.ssh_username}"
     extra_arguments = [
       # "-vv",
-      "-e ansible_python_interpreter=/usr/bin/python3",
       "-e cloud_img_url=${var.cloud_img_url} ",
+      "-e growpart_after_qemuimg=${var.vm_growpart_after_qemuimg}",
+      "-e root_part_number=${var.vm_growpart_root_part_number}",
       "-e vm_disk=${var.vm_guest_disk_drive} "
     ]
   }
@@ -320,6 +334,7 @@ build {
     user          = "${var.ssh_username}"
     extra_arguments = [
       # "-vv",
+      "-e ansible_python_interpreter=/usr/bin/python3",
       "-e ssh_root_login_file='${var.ssh_root_login_file}' ",
       "-e vm_host=${build.Host} ",
       "-e vm_validate_port=${var.guest_os_startup_validation_port} "

@@ -1,0 +1,15 @@
+## SUSE Tweaks
+# System and/or distro specific settings
+system_info:
+   distro: sles
+   # Default user name + that default users groups (if added/used)
+   default_user:
+     name: opensuse
+     gecos: "cloud-init created default user"
+     lock_passwd: True
+     sudo: ["ALL=(ALL) NOPASSWD:ALL"]
+     shell: /bin/bash
+   paths:
+      cloud_dir: /var/lib/cloud/
+      templates_dir: /etc/cloud/templates/
+   ssh_svcname: sshd

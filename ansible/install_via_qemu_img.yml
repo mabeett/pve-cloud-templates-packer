@@ -5,8 +5,20 @@
 ---
 - hosts: all
   become: yes
-  # gather_facts: no
+  gather_facts: yes
+  vars:
+    root_part_number: 1
+    growpart_after_qemuimg: yes
   tasks:
+  - name: Install qemu-block-curl qemu-toos in SystemRescueCD >= 10
+    community.general.pacman:
+      name:
+        - qemu-block-curl
+        - qemu-tools
+      state: present
+      update_cache: true
+    when: ansible_distribution_version is version('10.00', '>=')
+
   - name: "get effective url for {{ cloud_img_url }} - preventing redirect"
     ansible.builtin.command:
       cmd: "curl -I -o/dev/null -Ls -w %{url_effective} {{ cloud_img_url }}"
@@ -40,8 +52,8 @@
     until: job_result.finished
     retries: "{{ wait_sync | default(1800) }}"
 
-  - name: gropart for {{ vm_disk }} 1
-    ansible.builtin.command: "growpart --fudge 1 {{ vm_disk }} 1"
+  - name: "growpart for {{ vm_disk }} {{ root_part_number }}"
+    ansible.builtin.command: "growpart --fudge 1 {{ vm_disk }} {{ root_part_number }}"
     poll: 0
     async: 45000
     register: g_st

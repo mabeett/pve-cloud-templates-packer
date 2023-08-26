@@ -18,6 +18,6 @@ cloud_init_user = "ubuntu"
 
 # VM description
 vm_name              = "ubuntu-2304-cloudimg-template-WIP"
-template_name        = "ubuntu-2404-cloudimg"
+template_name        = "ubuntu-2304-cloudimg"
 template_description = "Ubuntu 23.04 (Lunar Lobster) via packer"
 vm_id                = 1000012

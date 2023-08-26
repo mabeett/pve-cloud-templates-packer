@@ -193,6 +193,18 @@ variable "cloud_img_url" {
   type        = string
 }
 
+variable "vm_growpart_after_qemuimg" {
+  description = "defines if growroot partition with growpart - used in ansible"
+  type        = string
+  default     = "true"
+}
+
+variable "vm_growpart_root_part_number" {
+  description = "Partition number to be resize after disk dump depends on vm_growpart_after_qemuimg"
+  type        = number
+  default     = 1
+}
+
 variable "vm_name" {
   type = string
 }
@@ -275,7 +287,7 @@ source "proxmox-iso" "VM" {
   ssh_password = "${var.ssh_password}"
 
   vm_name              = "${var.vm_name}"
-  template_description = "${var.template_description} - built on ${timestamp()}"
+  template_description = "${var.template_description}\n\n---\n\nbuilt via [pve-cloud-templates-packer](https://github.com/mabeett/pve-cloud-templates-packer) (or a fork)\n\n${timestamp()}"
   template_name        = "${var.template_name}"
   vm_id                = "${var.vm_id}"
   pool                 = "${var.vm_pool}"
@@ -284,12 +296,13 @@ source "proxmox-iso" "VM" {
 build {
   sources = ["source.proxmox-iso.VM"]
 
+  ## Current community.general collection does not handle cloud-init properly
+  # https://github.com/ansible-collections/community.general/issues/7136
   # provisioner "ansible" {
   #   playbook_file = "../ansible/proxmox_cloud_init_config.yml"
   #   user          = "${var.ssh_username}"
   #   extra_arguments = [
   #     # "-vv",
-  #     "-e ansible_python_interpreter=/usr/bin/python3.10",
   #     "-e proxmox_api_host=${var.proxmox_api_host} ",
   #     "-e proxmox_node=${var.proxmox_node} ",
   #     "-e proxmox_api_user=${var.proxmox_api_user} ",
@@ -308,9 +321,9 @@ build {
     user          = "${var.ssh_username}"
     extra_arguments = [
       "-vv",
-      "-e ansible_python_interpreter=/usr/bin/python3.10",
       "-e cloud_img_url=${var.cloud_img_url} ",
-      "-e growpart_after_qemuimg=false",
+      "-e growpart_after_qemuimg=${var.vm_growpart_after_qemuimg}",
+      "-e root_part_number=${var.vm_growpart_root_part_number}",
       "-e vm_disk=${var.vm_guest_disk_drive} "
     ]
   }

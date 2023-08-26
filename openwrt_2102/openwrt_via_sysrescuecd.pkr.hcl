@@ -320,40 +320,41 @@ source "proxmox-iso" "VM" {
   ssh_password = "${var.ssh_password}"
 
   vm_name              = "${var.vm_name}"
-  template_description = "${var.template_description} - built on ${timestamp()}"
+  template_description = "${var.template_description}\n\n---\n\nbuilt via [pve-cloud-templates-packer](https://github.com/mabeett/pve-cloud-templates-packer) (or a fork)\n\n${timestamp()}"
   template_name        = "${var.template_name}"
   vm_id                = "${var.vm_id}"
+  pool                 = "${var.vm_pool}"
 }
 
 build {
   sources = ["source.proxmox-iso.VM"]
 
-  provisioner "ansible" {
-    playbook_file = "../ansible/proxmox_cloud_init_config.yml"
-    user          = "${var.ssh_username}"
-    extra_arguments = [
-      # "-vv",
-      "-e ansible_python_interpreter=/usr/bin/python3.10",
-      "-e proxmox_api_host=${var.proxmox_api_host} ",
-      "-e proxmox_node=${var.proxmox_node} ",
-      "-e proxmox_api_user=${var.proxmox_api_user} ",
-      "-e proxmox_token_id=${var.proxmox_token_id} ",
-      "-e proxmox_token=${var.proxmox_token} ",
-      "-e cloud_init_user=${var.cloud_init_user} ",
-      "-e cloud_init_password=${var.ssh_password} ",
-      "-e cloud_init_ipconfig=${var.cloud_init_ipconfig} ",
-      "-e cloud_init_ssh_keys=${var.cloud_init_ssh_keys} ",
-      "-e vm_id=${var.vm_id} ",
-      "-e wireguard_server_listen_port=${var.wireguard_server_listen_port} "
-    ]
-  }
+  # https://github.com/ansible-collections/community.general/issues/7136
+  # provisioner "ansible" {
+  #   playbook_file = "../ansible/proxmox_cloud_init_config.yml"
+  #   user          = "${var.ssh_username}"
+  #   extra_arguments = [
+  #     # "-vv",
+  #     "-e proxmox_api_host=${var.proxmox_api_host} ",
+  #     "-e proxmox_node=${var.proxmox_node} ",
+  #     "-e proxmox_api_user=${var.proxmox_api_user} ",
+  #     "-e proxmox_token_id=${var.proxmox_token_id} ",
+  #     "-e proxmox_token=${var.proxmox_token} ",
+  #     "-e cloud_init_user=${var.cloud_init_user} ",
+  #     "-e cloud_init_password=${var.ssh_password} ",
+  #     "-e cloud_init_ipconfig=${var.cloud_init_ipconfig} ",
+  #     "-e cloud_init_ssh_keys=${var.cloud_init_ssh_keys} ",
+  #     "-e vm_id=${var.vm_id} ",
+  #     "-e wireguard_server_listen_port=${var.wireguard_server_listen_port} "
+  #   ]
+  # }
 
   provisioner "ansible" {
     playbook_file = "../ansible/install_openwrt.yml"
     user          = "${var.ssh_username}"
     extra_arguments = [
       # "-vv",
-      "-e ansible_python_interpreter=/usr/bin/python3.10",
+      "-e ansible_python_interpreter=/usr/bin/python3",
       "-e cloud_img_url=${var.cloud_img_url} ",
       "-e root_password=${var.ssh_password}",
       "-e vm_disk=${var.vm_guest_disk_drive} "
@@ -365,7 +366,7 @@ build {
     user          = "${var.ssh_username}"
     extra_arguments = [
       # "-vv",
-      "-e ansible_python_interpreter=/usr/bin/python3.10",
+      "-e ansible_python_interpreter=/usr/bin/python3",
       "-e cloud_img_url=${var.cloud_img_url} ",
       "-e root_password=${var.ssh_password}",
       "-e net_lan_netmask=${var.net_lan_netmask}",

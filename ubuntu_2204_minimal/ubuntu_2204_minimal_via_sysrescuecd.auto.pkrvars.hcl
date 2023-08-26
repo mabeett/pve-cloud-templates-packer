@@ -13,6 +13,7 @@ vm_cores  = "1"
 vm_memory = "1024"
 
 # OS
+# cloud_img_url   = "http://192.168.0.21/cloud-images/jammy-minimal-cloudimg-amd64.img"
 cloud_img_url   = "https://cloud-images.ubuntu.com/minimal/daily/jammy/current/jammy-minimal-cloudimg-amd64.img"
 cloud_init_user = "ubuntu"
 

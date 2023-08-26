@@ -1,7 +1,7 @@
 # systemrescuecd files
 ### this might be a local file!!!
-# iso_url          = "/mnt/700G/iso/systemrescue-10.01-amd64.iso"
-iso_url          = "https://fastly-cdn.system-rescue.org/releases/10.01/systemrescue-10.01-amd64.iso"
-iso_checksum     = "sha256:6cfe1e2e8f89f689a3110b3140942410aeb2ef304c403cfa86f364616f1090e6"
+# iso_url          = "https://deac-ams.dl.sourceforge.net/project/systemrescuecd/sysresccd-x86/9.00/systemrescue-9.00-amd64.iso"
+iso_url          = "/mnt/700G/iso/systemrescue-9.00-amd64.iso"
+iso_checksum     = "sha256:17374f4eea50ac0b7f094d54e3ab81d028581bfa97ea1ec6b099b63a0d66e996"
 iso_storage_pool = "local"
 iso_file         = "local:iso/systemrescue-9.00-amd64.iso"

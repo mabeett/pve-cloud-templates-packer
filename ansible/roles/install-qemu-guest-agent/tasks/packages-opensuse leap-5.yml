@@ -1,0 +1,19 @@
+---
+## created opensuse 15 Leap
+
+- name: Install kernel-kvmsmall
+  community.general.zypper:
+    name: kernel-kvmsmall
+    state: latest
+
+- name: Remove unwanted kernel
+  community.general.zypper:
+    name: kernel-default-base
+    state: absent
+
+# OpenSuse Leap cloud image installs SLE config overwriting the user setup
+# https://bugzilla.opensuse.org/show_bug.cgi?id=1214480
+- name: add cloud-init opensuse username
+  template:
+    src: 99_suse_system_info.cfg.j2
+    dest: /etc/cloud/cloud.cfg.d/99_suse_system_info.cfg
