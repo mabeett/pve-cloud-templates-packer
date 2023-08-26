@@ -272,7 +272,7 @@ source "proxmox-iso" "VM" {
   ssh_password = "${var.ssh_password}"
 
   vm_name              = "${var.vm_name}"
-  template_description = "${var.template_description} - built on ${timestamp()}"
+  template_description = "${var.template_description}\n\n---\n\nbuilt via [pve-cloud-templates-packer](https://github.com/mabeett/pve-cloud-templates-packer) (or a fork)\n\n${timestamp()}"
   template_name        = "${var.template_name}"
   vm_id                = "${var.vm_id}"
   pool                 = "${var.vm_pool}"
