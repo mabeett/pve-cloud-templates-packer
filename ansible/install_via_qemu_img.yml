@@ -7,9 +7,11 @@
   become: yes
   gather_facts: yes
   tasks:
-  - name: Install qemu-block-curl
+  - name: Install qemu-block-curl qemu-toos in SystemRescueCD >= 10
     community.general.pacman:
-      name: qemu-block-curl
+      name:
+        - qemu-block-curl
+        - qemu-tools
       state: present
       update_cache: true
     when: ansible_distribution_version is version('10.00', '>=')
