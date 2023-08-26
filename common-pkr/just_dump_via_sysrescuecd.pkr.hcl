@@ -193,6 +193,18 @@ variable "cloud_img_url" {
   type        = string
 }
 
+variable "vm_growpart_after_qemuimg" {
+  description = "defines if growroot partition with growpart - used in ansible"
+  type        = string
+  default     = "true"
+}
+
+variable "vm_growpart_root_part_number" {
+  description = "Partition number to be resize after disk dump depends on vm_growpart_after_qemuimg"
+  type        = number
+  default     = 1
+}
+
 variable "vm_name" {
   type = string
 }
@@ -310,7 +322,8 @@ build {
     extra_arguments = [
       "-vv",
       "-e cloud_img_url=${var.cloud_img_url} ",
-      "-e growpart_after_qemuimg=false",
+      "-e growpart_after_qemuimg=${var.vm_growpart_after_qemuimg}",
+      "-e root_part_number=${var.vm_growpart_root_part_number}",
       "-e vm_disk=${var.vm_guest_disk_drive} "
     ]
   }
