@@ -10,7 +10,7 @@ vm_disk_io_thread    = true
 
 # CPU & Memory
 vm_cores  = "1"
-vm_memory = "4096"
+vm_memory = "1024"
 
 # OS
 cloud_img_url   = "https://cloud-images.ubuntu.com/minimal/daily/lunar/current/lunar-minimal-cloudimg-amd64.img"
