@@ -23,27 +23,27 @@ Since packer's plugin lacks of some features related to VM setup, this ones are 
 
 ```
 
-  ┌───────────────────────────────────┐
-  │ ┌──────────────────────┐          │
-  │ │ Ansible              │          │
-  │ └─────────┬────────────┘          │
-  │           │  Packer - proxmox iso │
-  └─────┬─────┼───────────────────────┘
-        │     │                   .-~~~-.
-  ┌─────▼─────┼───────┐   .- ~ ~-(       )_ _
-  │           │       │  /                     ~ -.
-  │           │       │ |  CloudIMG 4 OpenStack     \
-  │  ┌────────▼────┐  │  \        ▲                .'
-  │  │             │  │    ~- . __│____│_____ . -~
-  │  │ SysRescueCD ├──┼───────────┘    │
-  │  └─────────────┘  │                │
-  │                   │                │
-  │ ┌───────────────┐ │                │
-  │ │  VM Disk      │ │                │
-  │ │               ◄─┼────────────────┘
-  │ └───────────────┘ │
-  │                VM │
-  └───────────────────┘
+  ┌─────────────────────────────────┐
+  │┌─────────────────────┐          │
+  ││      Ansible        │          │
+  │└────────┬────────────┘          │
+  │         │  Packer - proxmox iso │
+  └───┬─────┼───────────────────────┘
+      │     │                 .-~~~-.
+  ┌───▼─────┼─────┐   .- ~ ~-(       )_ _
+  │         │     │  /                    ~ -.
+  │         │     │ |  CloudIMG 4 OpenStack   \
+  │┌────────▼──┐  │  \        ▲              .'
+  ││           │  │    ~- . __│____│___ . -~
+  ││SysRescueCD├──┼───────────┘    │
+  │└───────────┘  │                │
+  │               │                │
+  │┌────────────┐ │                │
+  ││   VM Disk  │ │                │
+  ││            ◄─┼────────────────┘
+  │└────────────┘ │
+  │            VM │
+  └───────────────┘
 
 ```
 
@@ -73,12 +73,20 @@ This development has been made with
 - `README.md`: This file
 - `ubuntu_2004_cloudimg/`: packer directory for building ubuntu focal cloud-img.
 - `ubuntu_2004_minimal/`: packer directory for building ubuntu focal minimal cloud-img.
-- `ubuntu_2204_cloudimg/`: packer directory for building ubuntu jammy cloud-img
-- `ubuntu_2204_minimal/`: packer directory for building ubuntu jammy minimal cloud-img.
+- `ubuntu_2204_cloudimg/`: packer directory for building ubuntu Jammy Jellyfish cloud-img.
+- `ubuntu_2204_minimal/`: packer directory for building ubuntu Jammy Jellyfish minimal cloud-img.
+- `ubuntu_2210_cloudimg/`: packer directory for building ubuntu Kinetic Kudu cloud-img.
+- `ubuntu_2210_minimal/`: packer directory for building ubuntu Kinetic Kudu minimal cloud-img.
+- `ubuntu_2304_cloudimg/`: packer directory for building ubuntu Lunar Lobster cloud-img.
+- `ubuntu_2304_minimal/`: packer directory for building ubuntu  Lunar Lobster minimal cloud-img.
+- `ubuntu_2310_cloudimg/`: packer directory for building ubuntu Mantic Minotaur cloud-img.
+- `ubuntu_2310_minimal/`: packer directory for building ubuntu Mantic Minotaur minimal cloud-img.
 - `debian_11_generic/`: packer directory for building debian bullseye cloud image.
 - `debian_11_genericcloud/`: packer directory for building debian bullseye smaller cloud image.
 - `debian_12_generic/`: packer directory for building debian Bookworm cloud image.
 - `debian_12_genericcloud/`: packer directory for building debian Bookworm smaller cloud image.
+- `opensuse_leap_15.5/`: packer directory for building OpenSuse Leap cloud image.
+- `oracle_linux_9.2/`: packer directory for building Oracle Linux 9.2 VM.
 - `openwrt_2102/`: packer directory for building OpenWRT 21.02 VM.
 - `common-pkr/`: common code for the previous dirs.
 - `ansible/`: Ansible's playbooks used for the previous packer projects.
@@ -102,7 +110,7 @@ Depending on your proxmox node and the server with the cloud images bandwidth yo
 
 ### Adding a new image/template
 
-You may make symbolic links to files from [common-pkr](common-pkr/) directory as it's made on [ubuntu_2004_minimal](ubuntu_2004_minimal/) directory.
+You may make symbolic links to files from [common-pkr](common-pkr/) directory as it's made on [ubuntu_2204_minimal](ubuntu_2204_minimal/) directory.
 
 ## Know bugs and Future work
 
