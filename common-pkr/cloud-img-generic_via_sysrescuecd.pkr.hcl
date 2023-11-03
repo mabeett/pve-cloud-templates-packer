@@ -326,7 +326,11 @@ build {
   }
 
   provisioner "shell" {
-    inline = ["bash -c 'nohup systemctl reboot 2>&1 1>/dev/null &'"]
+    inline = ["bash -c 'shutdown -t 1 -r'"]
+  }
+
+  provisioner "shell-local" {
+    inline = ["sleep 5"]
   }
 
   provisioner "ansible" {
