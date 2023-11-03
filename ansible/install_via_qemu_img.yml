@@ -22,8 +22,6 @@
   - name: "get effective url for {{ cloud_img_url }} - preventing redirect"
     ansible.builtin.command:
       cmd: "curl -I -o/dev/null -Ls -w %{url_effective} {{ cloud_img_url }}"
-      ## command + curl is neccessary because url nor curl can get the url without body/content
-      warn: false
     register: eff_url
 
   - name: qemu-img copy "{{ eff_url.stdout }} to {{ vm_disk }}"
