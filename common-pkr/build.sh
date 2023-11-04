@@ -11,7 +11,8 @@ set -o nounset
 # set -x
 
 TIMESTAMP=$(date "+%s")
-TMPDIR="tmp/${TIMESTAMP}"
+BASETMPDIR="${BASETMPDIR:-/tmp}"
+TMPDIR="${BASETMPDIR}/${TIMESTAMP}"
 CI_FILE="cloudinit_${TIMESTAMP}.iso"
 
 ###############################################################################
