@@ -22,6 +22,7 @@ Remove dummy cloud init drive after packer from proxmox server
  - flatcar?
  - rancher?
  - Alpine?
+ - Amazon Linux 2023? [1](https://cdn.amazonlinux.com/al2023/os-images/2023.3.20240108.0/kvm/) [2](https://docs.aws.amazon.com/linux/al2023/ug/outside-ec2.html)
 
 
 # DONE
