@@ -30,6 +30,7 @@ Remove dummy cloud init drive after packer from proxmox server
 
  - opensuse leap #11
  - oracle linux 9.2 #9
+ - Ubuntu Noble https://cloud-images.ubuntu.com/noble/
 
 ## take prev project as template
 
