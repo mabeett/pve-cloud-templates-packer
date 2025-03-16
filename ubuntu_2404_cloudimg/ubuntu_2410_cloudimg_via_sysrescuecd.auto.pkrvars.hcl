@@ -13,11 +13,11 @@ vm_cores  = "1"
 vm_memory = "1024"
 
 # OS
-cloud_img_url   = "https://cloud-images.ubuntu.com/minimal/daily/lunar/current/lunar-minimal-cloudimg-amd64.img"
+cloud_img_url   = "https://cloud-images.ubuntu.com/noble/current/noble-server-cloudimg-amd64.img"
 cloud_init_user = "ubuntu"
 
 # VM description
-vm_name              = "ubuntu-2304-cloudimg-minimal-template-WIP"
-template_name        = "ubuntu-2304-cloudimg-minimal"
-template_description = "Ubuntu 23.04 (Lunar Lobster) minimal via packer"
-vm_id                = 1000011
+vm_name              = "ubuntu-2404-cloudimg-template-WIP"
+template_name        = "ubuntu-2404-cloudimg"
+template_description = "Ubuntu 24.04 LTS (Noble Numbat) via packer\n\n[info](https://cloud-images.ubuntu.com/noble/current/)"
+vm_id                = 1000018

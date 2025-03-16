@@ -40,6 +40,11 @@ variable "iso_checksum" {
   type = string
 }
 
+variable "iso_type" {
+  type    = string
+  default = "ide"
+}
+
 variable "iso_storage_pool" {
   type = string
 }
@@ -219,7 +224,6 @@ variable "template_description" {
   type = string
 }
 
-# The "legacy_isotime" function has been provided for backwards compatability, but we recommend switching to the timestamp and formatdate functions.
 source "proxmox-iso" "VM" {
   insecure_skip_tls_verify = "true"
   proxmox_url              = "https://${var.proxmox_api_host}:8006/api2/json"
@@ -248,12 +252,26 @@ source "proxmox-iso" "VM" {
     io_thread    = "${var.vm_disk_io_thread}"
   }
 
-  ## use in case of having the file
-  iso_file = "${var.iso_file}"
+  boot_iso {
+    type             = "${var.iso_type}"
+    iso_storage_pool = "${var.iso_storage_pool}"
+    iso_checksum     = "${var.iso_checksum}"
+    ## use in case of having the iso file available in the PVE storage
+    iso_file = "${var.iso_file}"
+    ## use in case of downloading the file from http server.
+    # iso_url           = "${var.iso_url}"
+    unmount           = true
+    keep_cdrom_device = false
+    # there is a bug or server/client missconfiguration which returns
+    # "--> proxmox-iso.VM: unexpected EOF\npanic: runtime error: invalid memory address or nil pointer dereference"
+    # iso_download_pve = true
+  }
+
+  boot_command = "${local.iso_boot_command}"
 
   # cloud-init ephemeral device
   additional_iso_files {
-    device           = "${var.temp_cinit_device}"
+    type             = "${var.temp_cinit_device}"
     iso_storage_pool = "${var.temp_cinit_iso_storage_pool}"
     cd_label         = "cidata"
     cd_files = [
@@ -261,14 +279,9 @@ source "proxmox-iso" "VM" {
       "${var.temp_cinit_user_data_file}",
       "${var.temp_cinit_meta_data_file}"
     ]
-    unmount = true
+    unmount           = true
+    keep_cdrom_device = false
   }
-  # Use in case of no having the file
-  unmount_iso      = true
-  iso_storage_pool = "${var.iso_storage_pool}"
-  iso_checksum     = "${var.iso_checksum}"
-  iso_url          = "${var.iso_url}"
-  boot_command     = "${local.iso_boot_command}"
 
   network_adapters {
     firewall    = false

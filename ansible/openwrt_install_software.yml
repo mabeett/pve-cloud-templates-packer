@@ -22,7 +22,7 @@
     vars:
       ansible_connection: local
     become: no
-    when: validate_new_OS
+    when: validate_new_OS | default(True)
 
   - name: waiting for connection ssh access
     wait_for_connection:

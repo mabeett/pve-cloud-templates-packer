@@ -4,8 +4,6 @@ Fresh cloud images KVM Virtual Machine templates for proxmox Virtual Environment
 
 ## Context
 
-
-
 [Proxmox Virtual Environment](https://www.proxmox.com/en/proxmox-ve) (PVE) supports Cloud-init [[1](https://pve.proxmox.com/pve-docs/pve-admin-guide.html#qm_cloud_init)][[2](https://pve.proxmox.com/wiki/Cloud-Init_Support)] for KVM Virtual Machines (VM).
 
 PVE provides a [REST API](https://pve.proxmox.com/wiki/Proxmox_VE_API).
@@ -21,7 +19,7 @@ Since packer's plugin lacks of some features related to VM setup, this ones are 
 
 ### Details
 
-```
+```txt
 
   ┌─────────────────────────────────┐
   │┌─────────────────────┐          │
@@ -62,10 +60,11 @@ Packer proxmox builder cannot make some VM setups as serial drive, so Ansible is
 This development has been made with
 
 - bash
-- `mkisofs` (via [genisoimage](https://packages.ubuntu.com/jammy/genisoimage) ubuntu package).
+- `mkisofs` (via `genisoimage` [Ubuntu](https://packages.ubuntu.com/noble/genisoimage) or [Fedora](https://packages.fedoraproject.org/pkgs/cdrkit/genisoimage/) packages).
 - Packer 1.8.6
-- Ansible 2.10.5
- - `netaddr` python package installed in the controller.
+- Ansible 11.3.0
+  - `netaddr` python package installed in the controller.
+  - `python3-passlib` [Ubuntu](https://packages.ubuntu.com/noble/python3-passlib) or [Fedora](https://packages.fedoraproject.org/pkgs/python-passlib/python3-passlib/) packages.
 - Proxmox PVE 7.4 with his API token.
 
 ## Content
@@ -75,12 +74,8 @@ This development has been made with
 - `ubuntu_2004_minimal/`: packer directory for building ubuntu focal minimal cloud-img.
 - `ubuntu_2204_cloudimg/`: packer directory for building ubuntu Jammy Jellyfish cloud-img.
 - `ubuntu_2204_minimal/`: packer directory for building ubuntu Jammy Jellyfish minimal cloud-img.
-- `ubuntu_2210_cloudimg/`: packer directory for building ubuntu Kinetic Kudu cloud-img.
-- `ubuntu_2210_minimal/`: packer directory for building ubuntu Kinetic Kudu minimal cloud-img.
-- `ubuntu_2304_cloudimg/`: packer directory for building ubuntu Lunar Lobster cloud-img.
-- `ubuntu_2304_minimal/`: packer directory for building ubuntu  Lunar Lobster minimal cloud-img.
-- `ubuntu_2310_cloudimg/`: packer directory for building ubuntu Mantic Minotaur cloud-img.
-- `ubuntu_2310_minimal/`: packer directory for building ubuntu Mantic Minotaur minimal cloud-img.
+- `ubuntu_2404_cloudimg/`: packer directory for building ubuntu 24.04 (Noble Numbat) cloud-img.
+- `ubuntu_2404_minimal/`: packer directory for building ubuntu 24.04 (Noble Numbat) minimal cloud-img.
 - `debian_11_generic/`: packer directory for building debian bullseye cloud image.
 - `debian_11_genericcloud/`: packer directory for building debian bullseye smaller cloud image.
 - `debian_12_generic/`: packer directory for building debian Bookworm cloud image.
@@ -100,7 +95,7 @@ This development has been made with
 - read and setup local files for the packer directory involved. Edit/generate `*.auto.pkrvars.hcl` or `variables.local.sh`, you may see the example files.
 - execute build script
 
-```
+```sh
 export distro="ubuntu_2204_cloudimg"
 cd ${distro}/
 bash build.sh
@@ -120,6 +115,6 @@ See [TODO](TODO.md) file.
 
 This are other project/resources for solving part or entirely this work:
 
-- https://gist.github.com/chriswayg/43fbea910e024cbe608d7dcb12cb8466
-- https://gist.github.com/chriswayg/b6422dcc69cb3b7e41f2998f1150e1df
-- https://cloudalbania.com/posts/2022-01-homelab-with-proxmox-and-packer/
+- <https://gist.github.com/chriswayg/43fbea910e024cbe608d7dcb12cb8466>
+- <https://gist.github.com/chriswayg/b6422dcc69cb3b7e41f2998f1150e1df>
+- <https://cloudalbania.com/posts/2022-01-homelab-with-proxmox-and-packer/>

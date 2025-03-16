@@ -7,7 +7,7 @@ PrivateKey = {{ wireguard_client_key_auto }}
 PublicKey = {{ wireguard_server_pubkey_auto }}
 Endpoint = {{ wireguard_server_listen_address }}:{{ wireguard_server_listen_port }}
 #AllowedIPs = 0.0.0.0/0, ::/0
-AllowedIPs =  {{ (net_lan_ipaddr + '/' + ((net_lan_ipaddr + '/' + net_lan_netmask) | ipaddr('prefix')) | string ) | ipaddr }}
+AllowedIPs =  {{ (net_lan_ipaddr + '/' + ((net_lan_ipaddr + '/' + net_lan_netmask) | ansible.utils.ipaddr('prefix')) | string ) | ansible.utils.ipaddr }}
 {%- for cidr in wireguard_client_extra_routes %}
 , {{ cidr }}
 {%- endfor %}

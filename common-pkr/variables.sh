@@ -6,7 +6,7 @@ export PKR_VAR_ssh_username="root"
 export PKR_VAR_vm_net_bridge="vmbr0"
 export PKR_VAR_vm_net_mac_address="be:ef:ca:fe:c0:ca"
 export PKR_VAR_guest_os_startup_validation_port="9008"
-export PKR_VAR_temp_cinit_device="ide1"
+export PKR_VAR_temp_cinit_device="ide"
 export PKR_VAR_temp_cinit_iso_storage_pool="local"
 
 export Cloud_Init_dns_address="192.168.0.1"
