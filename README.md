@@ -66,6 +66,7 @@ This development has been made with
 - Packer 1.8.6
 - Ansible 11.3.0
   - `netaddr` python package installed in the controller.
+  - `python3-passlib` [Ubuntu](https://packages.ubuntu.com/noble/python3-passlib) or [Fedora](https://packages.fedoraproject.org/pkgs/python-passlib/python3-passlib/) packages.
 - Proxmox PVE 7.4 with his API token.
 
 ## Content

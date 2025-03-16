@@ -94,7 +94,7 @@
     ansible.builtin.replace:
       path: "{{ wg_mountpoint }}/etc/shadow"
       regexp: '^(root)::(.+)$'
-      replace: "\\1:{{ root_password | password_hash('md5_crypt') }}:\\2"
+      replace: "\\1:{{ root_password | ansible.builtin.password_hash('md5_crypt') }}:\\2"
 
 ################################################################################
 ################# wireguard client configuration ###############################
