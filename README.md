@@ -4,8 +4,6 @@ Fresh cloud images KVM Virtual Machine templates for proxmox Virtual Environment
 
 ## Context
 
-
-
 [Proxmox Virtual Environment](https://www.proxmox.com/en/proxmox-ve) (PVE) supports Cloud-init [[1](https://pve.proxmox.com/pve-docs/pve-admin-guide.html#qm_cloud_init)][[2](https://pve.proxmox.com/wiki/Cloud-Init_Support)] for KVM Virtual Machines (VM).
 
 PVE provides a [REST API](https://pve.proxmox.com/wiki/Proxmox_VE_API).
@@ -21,7 +19,7 @@ Since packer's plugin lacks of some features related to VM setup, this ones are 
 
 ### Details
 
-```
+```txt
 
   ┌─────────────────────────────────┐
   │┌─────────────────────┐          │
@@ -103,7 +101,7 @@ This development has been made with
 - read and setup local files for the packer directory involved. Edit/generate `*.auto.pkrvars.hcl` or `variables.local.sh`, you may see the example files.
 - execute build script
 
-```
+```sh
 export distro="ubuntu_2204_cloudimg"
 cd ${distro}/
 bash build.sh
@@ -123,6 +121,6 @@ See [TODO](TODO.md) file.
 
 This are other project/resources for solving part or entirely this work:
 
-- https://gist.github.com/chriswayg/43fbea910e024cbe608d7dcb12cb8466
-- https://gist.github.com/chriswayg/b6422dcc69cb3b7e41f2998f1150e1df
-- https://cloudalbania.com/posts/2022-01-homelab-with-proxmox-and-packer/
+- <https://gist.github.com/chriswayg/43fbea910e024cbe608d7dcb12cb8466>
+- <https://gist.github.com/chriswayg/b6422dcc69cb3b7e41f2998f1150e1df>
+- <https://cloudalbania.com/posts/2022-01-homelab-with-proxmox-and-packer/>
