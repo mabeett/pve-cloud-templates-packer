@@ -64,8 +64,8 @@ This development has been made with
 - bash
 - `mkisofs` (via [genisoimage](https://packages.ubuntu.com/jammy/genisoimage) ubuntu package).
 - Packer 1.8.6
-- Ansible 2.10.5
- - `netaddr` python package installed in the controller.
+- Ansible 11.3.0
+  - `netaddr` python package installed in the controller.
 - Proxmox PVE 7.4 with his API token.
 
 ## Content
