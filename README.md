@@ -62,7 +62,7 @@ Packer proxmox builder cannot make some VM setups as serial drive, so Ansible is
 This development has been made with
 
 - bash
-- `mkisofs` (via [genisoimage](https://packages.ubuntu.com/jammy/genisoimage) ubuntu package).
+- `mkisofs` (via `genisoimage` [Ubuntu](https://packages.ubuntu.com/noble/genisoimage) or [Fedora](https://packages.fedoraproject.org/pkgs/cdrkit/genisoimage/) packages).
 - Packer 1.8.6
 - Ansible 11.3.0
   - `netaddr` python package installed in the controller.
