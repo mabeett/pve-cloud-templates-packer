@@ -1,7 +1,7 @@
 packer {
   required_plugins {
-    happycloud = {
-      version = ">= 1.1.2"
+    proxmox = {
+      version = ">= 1.2.2"
       source  = "github.com/hashicorp/proxmox"
     }
     ansible = {

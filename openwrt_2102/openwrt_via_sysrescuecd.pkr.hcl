@@ -40,6 +40,11 @@ variable "iso_checksum" {
   type = string
 }
 
+variable "iso_type" {
+  type    = string
+  default = "ide"
+}
+
 variable "iso_storage_pool" {
   type = string
 }
@@ -291,14 +296,22 @@ source "proxmox-iso" "VM" {
     io_thread    = "${var.vm_disk_io_thread}"
   }
 
-  ## use in case of having the file
-  iso_file = "${var.iso_file}"
-  # Use in case of no having the file
-  unmount_iso      = true
-  iso_storage_pool = "${var.iso_storage_pool}"
-  iso_checksum     = "${var.iso_checksum}"
-  iso_url          = "${var.iso_url}"
-  boot_command     = "${local.iso_boot_command}"
+  boot_iso {
+    type             = "${var.iso_type}"
+    iso_storage_pool = "${var.iso_storage_pool}"
+    iso_checksum     = "${var.iso_checksum}"
+    ## use in case of having the iso file available in the PVE storage
+    iso_file = "${var.iso_file}"
+    ## use in case of downloading the file from http server.
+    # iso_url          = "${var.iso_url}"
+    unmount           = true
+    keep_cdrom_device = false
+    # there is a bug or server/client missconfiguration which returns
+    # "--> proxmox-iso.VM: unexpected EOF\npanic: runtime error: invalid memory address or nil pointer dereference"
+    # iso_download_pve = true
+  }
+
+  boot_command = "${local.iso_boot_command}"
 
   network_adapters {
     firewall    = false
@@ -306,12 +319,14 @@ source "proxmox-iso" "VM" {
     model       = "${var.vm_net_model2}"
     mac_address = "${var.vm_net_mac_address2}"
   }
+
   network_adapters {
     firewall    = false
     bridge      = "${var.vm_net_bridge}"
     model       = "${var.vm_net_model}"
     mac_address = "${var.vm_net_mac_address}"
   }
+
   os         = "l26"
   qemu_agent = "true"
 
@@ -335,6 +350,7 @@ build {
   #   user          = "${var.ssh_username}"
   #   extra_arguments = [
   #     # "-vv",
+  #     "-e ansible_python_interpreter=/usr/bin/python3",
   #     "-e proxmox_api_host=${var.proxmox_api_host} ",
   #     "-e proxmox_node=${var.proxmox_node} ",
   #     "-e proxmox_api_user=${var.proxmox_api_user} ",
@@ -395,6 +411,7 @@ build {
     user          = "${var.ssh_username}"
     extra_arguments = [
       # "-vv",
+      "-e ansible_python_interpreter=/usr/bin/python3",
       "-e ssh_root_login_file='${var.ssh_root_login_file}' ",
       "-e vm_host=${build.Host} ",
       "-e wireguard_server_listen_port=${var.wireguard_server_listen_port} ",
