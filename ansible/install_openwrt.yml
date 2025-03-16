@@ -18,9 +18,7 @@
     # https://git.openwrt.org/?p=openwrt/openwrt.git;a=blob;f=target/linux/x86/image/Makefile;hb=598b29585ed9501e751b8d3faf3b6e017ad96baa#l109
   - name: "curl -s {{ cloud_img_url }} | zcat | dd of={{ vm_disk }}"
     ansible.builtin.shell: "curl -s {{ cloud_img_url }} | zcat | dd of={{ vm_disk }}"
-    args:
       ## command + curl is neccessary because url nor curl can get the url without body/content
-      warn: false
     poll: 0
     async: 45000
     register: q_st

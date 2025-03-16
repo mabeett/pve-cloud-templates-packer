@@ -174,5 +174,4 @@
   - name: "umount {{ wg_mountpoint }} "
     ansible.builtin.command:
       cmd: "umount {{ wg_mountpoint }} "
-      warn: false
     register: umount
