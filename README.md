@@ -80,6 +80,8 @@ This development has been made with
 - `debian_11_genericcloud/`: packer directory for building debian bullseye smaller cloud image.
 - `debian_12_generic/`: packer directory for building debian Bookworm cloud image.
 - `debian_12_genericcloud/`: packer directory for building debian Bookworm smaller cloud image.
+- `debian_13_generic/`: packer directory for building debian Trixie cloud image.
+- `debian_13_genericcloud/`: packer directory for building debian Trixie smaller cloud image.
 - `opensuse_leap_15.5/`: packer directory for building OpenSuse Leap cloud image.
 - `oracle_linux_9.2/`: packer directory for building Oracle Linux 9.2 VM.
 - `openwrt_2102/`: packer directory for building OpenWRT 21.02 VM.
