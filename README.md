@@ -70,8 +70,8 @@ This development has been made with
 ## Content
 
 - `README.md`: This file
-- `ubuntu_2004_cloudimg/`: packer directory for building ubuntu focal cloud-img.
-- `ubuntu_2004_minimal/`: packer directory for building ubuntu focal minimal cloud-img.
+- `ubuntu_2004_cloudimg/`: packer directory for building ubuntu focal cloud-img. Only compatible with Ansible 12 (ansible core 2.19.x).
+- `ubuntu_2004_minimal/`: packer directory for building ubuntu focal minimal cloud-img. Only compatible with Ansible 12 (ansible core 2.19.x).
 - `ubuntu_2204_cloudimg/`: packer directory for building ubuntu Jammy Jellyfish cloud-img.
 - `ubuntu_2204_minimal/`: packer directory for building ubuntu Jammy Jellyfish minimal cloud-img.
 - `ubuntu_2404_cloudimg/`: packer directory for building ubuntu 24.04 (Noble Numbat) cloud-img.
