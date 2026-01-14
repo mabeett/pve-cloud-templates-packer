@@ -1,0 +1,13 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: false
+
+  vars:
+    max_full: "2.16.99"
+
+  tasks:
+    - name: Validate max ansible version {{ ansible_version.full }} <= {{ max_full }}
+      ansible.builtin.fail:
+        msg: "Ansible Version is {{ ansible_version.full }} y higher than {{ max_full }} and incompatible withs this build"
+      when: ansible_version.full is version(max_full, 'ge', version_type='semver')
