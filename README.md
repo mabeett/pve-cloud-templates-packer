@@ -84,6 +84,7 @@ This development has been made with
 - `debian_13_genericcloud/`: packer directory for building debian Trixie smaller cloud image.
 - `opensuse_leap_15.5/`: packer directory for building OpenSuse Leap cloud image 15.5. Only compatible with ansible <= 9.
 - `opensuse_leap_15.6/`: packer directory for building OpenSuse Leap cloud image 15.6. Only compatible with ansible <= 9.
+- `opensuse_leap_16.0`: packer directory for building OpenSuse Leap Cloud Image 16.0.
 - `oracle_linux_9.2/`: packer directory for building Oracle Linux 9.2 VM.
 - `openwrt_2102/`: packer directory for building OpenWRT 21.02 VM.
 - `common-pkr/`: common code for the previous dirs.
