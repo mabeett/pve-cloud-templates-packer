@@ -17,7 +17,7 @@
         - qemu-tools
       state: present
       update_cache: true
-    when: ansible_distribution_version is version('10.00', '>=')
+    when: ansible_facts['distribution_version'] is version('10.00', '>=')
 
   - name: "get effective url for {{ cloud_img_url }} - preventing redirect"
     ansible.builtin.command:
