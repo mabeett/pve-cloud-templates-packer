@@ -1,11 +1,5 @@
 # TODO
 
-## Add Virtio RNG
-
- - wait integration [of feature](https://github.com/hashicorp/packer-plugin-proxmox/pull/195) in packer plugin, see [releases](https://github.com/hashicorp/packer-plugin-proxmox/releases)
- - hardware on proxmox
- - software considerations: kernel 5.10 version?
-
 ## CPU type study
 
  - according [to qemu](https://qemu.readthedocs.io/en/latest/system/qemu-cpu-models.html#other-non-recommended-x86-cpus) the default one - kvm64 is non-recommended.
@@ -26,6 +20,12 @@ Remove dummy cloud init drive after packer from proxmox server
 
 
 # DONE
+
+## Add Virtio RNG
+
+ - wait integration [of feature](https://github.com/hashicorp/packer-plugin-proxmox/pull/195) in packer plugin, see [releases](https://github.com/hashicorp/packer-plugin-proxmox/releases)
+ - hardware on proxmox
+ - software considerations: kernel 5.10 version?
 
 ## more distros
 
