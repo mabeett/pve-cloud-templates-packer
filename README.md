@@ -76,6 +76,8 @@ This development has been made with
 - `ubuntu_2204_minimal/`: packer directory for building ubuntu Jammy Jellyfish minimal cloud-img.
 - `ubuntu_2404_cloudimg/`: packer directory for building ubuntu 24.04 (Noble Numbat) cloud-img.
 - `ubuntu_2404_minimal/`: packer directory for building ubuntu 24.04 (Noble Numbat) minimal cloud-img.
+- `ubuntu_2604_cloudimg/`: packer directory for building ubuntu 26.04 (Resolute Raccoon) cloud-img.
+- `ubuntu_2604_minimal/`: packer directory for building ubuntu 26.04 (Resolute Raccoon) minimal cloud-img.
 - `debian_11_generic/`: packer directory for building debian bullseye cloud image.
 - `debian_11_genericcloud/`: packer directory for building debian bullseye smaller cloud image.
 - `debian_12_generic/`: packer directory for building debian Bookworm cloud image.
