@@ -5,10 +5,6 @@
  - according [to qemu](https://qemu.readthedocs.io/en/latest/system/qemu-cpu-models.html#other-non-recommended-x86-cpus) the default one - kvm64 is non-recommended.
  - ( cpu_type  flag )
 
-## Remove dummy cloud init drive
-
-Remove dummy cloud init drive after packer from proxmox server
-
 ## add more distros
 
  - rocky?
@@ -20,6 +16,11 @@ Remove dummy cloud init drive after packer from proxmox server
 
 
 # DONE
+
+## Remove dummy cloud init drive
+
+(done in https://github.com/mabeett/pve-cloud-templates-packer/commit/97a05c8f2eccbfc4c56c54ecb4373549602c9675)
+Remove dummy cloud init drive after packer from proxmox server
 
 ## Add Virtio RNG
 
