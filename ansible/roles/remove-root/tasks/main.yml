@@ -2,12 +2,12 @@
 #
 ---
 - setup: gather_subset=!all,!any,min
-  when: (ansible_distribution is not defined) or (ansible_distribution_release is not defined)
+  when: (ansible_facts['distribution'] is not defined) or (ansible_facts['distribution_release'] is not defined)
 
 - include_tasks: "{{ nssh }}"
   with_first_found:
-    - "ssh-non-root-{{ ansible_distribution | lower }}-{{ ansible_distribution_release | lower }}.yml"
-    - "ssh-non-root-{{ ansible_distribution | lower }}-default.yml"
+    - "ssh-non-root-{{ ansible_facts['distribution'] | lower }}-{{ ansible_facts['distribution_release'] | lower }}.yml"
+    - "ssh-non-root-{{ ansible_facts['distribution'] | lower }}-default.yml"
     - "ssh-non-root-default.yml"
   loop_control:
     loop_var: nssh

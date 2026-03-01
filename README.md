@@ -70,19 +70,23 @@ This development has been made with
 ## Content
 
 - `README.md`: This file
-- `ubuntu_2004_cloudimg/`: packer directory for building ubuntu focal cloud-img.
-- `ubuntu_2004_minimal/`: packer directory for building ubuntu focal minimal cloud-img.
+- `ubuntu_2004_cloudimg/`: packer directory for building ubuntu focal cloud-img. Only compatible with Ansible 12 (ansible core 2.19.x).
+- `ubuntu_2004_minimal/`: packer directory for building ubuntu focal minimal cloud-img. Only compatible with Ansible 12 (ansible core 2.19.x).
 - `ubuntu_2204_cloudimg/`: packer directory for building ubuntu Jammy Jellyfish cloud-img.
 - `ubuntu_2204_minimal/`: packer directory for building ubuntu Jammy Jellyfish minimal cloud-img.
 - `ubuntu_2404_cloudimg/`: packer directory for building ubuntu 24.04 (Noble Numbat) cloud-img.
 - `ubuntu_2404_minimal/`: packer directory for building ubuntu 24.04 (Noble Numbat) minimal cloud-img.
+- `ubuntu_2604_cloudimg/`: packer directory for building ubuntu 26.04 (Resolute Raccoon) cloud-img.
+- `ubuntu_2604_minimal/`: packer directory for building ubuntu 26.04 (Resolute Raccoon) minimal cloud-img.
 - `debian_11_generic/`: packer directory for building debian bullseye cloud image.
 - `debian_11_genericcloud/`: packer directory for building debian bullseye smaller cloud image.
 - `debian_12_generic/`: packer directory for building debian Bookworm cloud image.
 - `debian_12_genericcloud/`: packer directory for building debian Bookworm smaller cloud image.
 - `debian_13_generic/`: packer directory for building debian Trixie cloud image.
 - `debian_13_genericcloud/`: packer directory for building debian Trixie smaller cloud image.
-- `opensuse_leap_15.5/`: packer directory for building OpenSuse Leap cloud image.
+- `opensuse_leap_15.5/`: packer directory for building OpenSuse Leap cloud image 15.5. Only compatible with ansible <= 9.
+- `opensuse_leap_15.6/`: packer directory for building OpenSuse Leap cloud image 15.6. Only compatible with ansible <= 9.
+- `opensuse_leap_16.0`: packer directory for building OpenSuse Leap Cloud Image 16.0.
 - `oracle_linux_9.2/`: packer directory for building Oracle Linux 9.2 VM.
 - `openwrt_2102/`: packer directory for building OpenWRT 21.02 VM.
 - `common-pkr/`: common code for the previous dirs.

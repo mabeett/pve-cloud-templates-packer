@@ -238,6 +238,12 @@ source "proxmox-iso" "VM" {
   cores    = "${var.vm_cores}"
   memory   = "${var.vm_memory}"
 
+  rng0 {
+    source    = "/dev/urandom"
+    max_bytes = 1024
+    period    = 1000
+  }
+
   serials = ["socket"]
   vga {
     type = "${var.vm_serial_device}"

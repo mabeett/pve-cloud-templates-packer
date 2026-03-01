@@ -2,12 +2,12 @@
 #
 
 - setup: gather_subset=!all,!any,min
-  when: (ansible_distribution is not defined) or (ansible_distribution_release is not defined)
+  when: (ansible_facts['distribution'] is not defined) or (ansible_facts['distribution_release'] is not defined)
 
 - include_tasks: "{{ pkgs }}"
   with_first_found:
-    - "packages-{{ ansible_distribution | lower }}-{{ ansible_distribution_release | lower }}.yml"
-    - "packages-{{ ansible_distribution | lower }}-default.yml"
+    - "packages-{{ ansible_facts['distribution'] | lower }}-{{ ansible_facts['distribution_release'] | lower }}.yml"
+    - "packages-{{ ansible_facts['distribution'] | lower }}-default.yml"
     - "packages-default.yml"
   loop_control:
     loop_var: pkgs
